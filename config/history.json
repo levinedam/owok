@@ -1,0 +1,29 @@
+{
+    "sessions": [
+        {
+            "id": 1,
+            "date": "2025-12-29",
+            "start_time": "15:40:19",
+            "end_time": null,
+            "stats": {
+                "hunts": 0,
+                "battles": 0,
+                "commands": 862,
+                "captchas": 0
+            }
+        }
+    ],
+    "cash_history": [
+        {
+            "timestamp": "2025-12-29 15:48:04",
+            "amount": 255979
+        }
+    ],
+    "totals": {
+        "all_time_hunts": 0,
+        "all_time_battles": 0,
+        "all_time_commands": 862,
+        "all_time_captchas": 0,
+        "total_sessions": 1
+    }
+}
