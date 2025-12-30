@@ -332,12 +332,7 @@ This tool is for **educational purposes only**. Using self-bots violates Discord
 
 </div>
 
----
-
-## 📝 License
-
-This project is private and intended for personal use only. Redistribution is not permitted without explicit permission.
-
+ 
 ---
 
 <div align="center">
