@@ -1,4 +1,14 @@
-﻿/* NEURA-SELF DASHBOARD 5.0 (ULTIMATE) */
+ /* This file is part of NeuraSelf-UwU.
+ Copyright (c) 2025-Present Routo
+
+NeuraSelf-UwU is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+You should have received a copy of the GNU General Public License
+along with NeuraSelf-UwU. If not, see <https://www.gnu.org/licenses/>.*/
+
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap');
 
 :root {
@@ -43,7 +53,7 @@ body {
     transition: 0.3s;
 }
 
-/* Sidebar brand styles */
+
 .brand {
     display: flex;
     align-items: center;
@@ -54,19 +64,19 @@ body {
 
 .brand-icon {
     color: #ff4d4d;
-    /* Red accent */
+    
     font-size: 1.4em;
     flex-shrink: 0;
 }
 
-/* Main text with red-to-silver gradient */
+
 .brand-main {
     font-family: 'Orbitron', sans-serif;
     font-weight: 800;
-    /* Extra bold */
+
     font-size: 1.3em;
     background: linear-gradient(90deg, #ff1f1f, #ffffff);
-    /* Bright Red to White/Silver */
+   
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 0 10px rgba(255, 31, 31, 0.3);
@@ -82,7 +92,7 @@ body {
     margin-left: -2px;
 }
 
-/* Responsive adjustments for narrow sidebar */
+
 @media (max-width: 280px) {
     .brand-main {
         font-size: 1em;
@@ -290,7 +300,7 @@ body {
     letter-spacing: 1px;
 }
 
-/* --- PRO TOGGLE --- */
+
 .module-toggle {
     cursor: pointer;
     display: flex;
@@ -604,7 +614,7 @@ h1 {
     letter-spacing: 1px;
 }
 
-/* DYNAMIC ARRAY INPUT */
+
 .array-container {
     display: flex;
     flex-direction: column;
@@ -647,7 +657,7 @@ h1 {
     color: var(--success);
 }
 
-/* MODULE GROUPS */
+
 .module-group {
     display: flex;
     flex-wrap: wrap;
@@ -664,7 +674,7 @@ h1 {
     min-width: 250px;
 }
 
-/* INPUTS */
+
 .control-label {
     display: block;
     font-size: 0.85rem;
@@ -799,7 +809,7 @@ input[type="number"]:focus {
     border: 1px solid var(--border);
 }
 
-/* RESPONSIVE MOBILE ADJUSTMENTS */
+
 @media (max-width: 768px) {
     .app-shell {
         flex-direction: column;
@@ -914,9 +924,8 @@ input[type="number"]:focus {
     }
 }
 
-/* --- NEW STYLES FOR HISTORY --- */
 
-/* Scrollbar Clean */
+
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -932,7 +941,7 @@ input[type="number"]:focus {
     background: #555; 
 }
 
-/* Log Badges */
+
 .badge {
     padding: 8px 16px;
     border-radius: 6px;
