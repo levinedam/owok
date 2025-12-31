@@ -12,6 +12,7 @@
 
 import asyncio
 import time
+from discord.ext import commands
 import re
 import os
 import threading
@@ -20,7 +21,7 @@ from playsound3 import playsound
 from plyer import notification
 import core.state as state
 
-class Security:
+class Security(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         cfg = bot.config.get('security', {})
@@ -31,8 +32,8 @@ class Security:
         self.monitor_id = str(bot.config.get('core', {}).get('monitor_bot_id', '408785106942164992'))
         self.channel_id = bot.channel_id
         self.beep_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "beeps", "security_beep.mp3")
-        self.ban_keywords = ["**☠ |** You have been banned"]
-        self.captcha_keywords = ["captcha", "human", "verify", "please complete"]
+        self.ban_keywords = ["youhavebeenbanned"]
+        self.captcha_keywords = ["captcha", "human", "verify", "pleasecomplete"]
 
     def _show_desktop_notification(self, message):
         if not self.notifications_enabled:
@@ -69,8 +70,8 @@ class Security:
 
     def _contains_keyword(self, text, keywords):
         if not text: return False
-        text = re.sub(r'[\u200B-\u200D\uFEFF]', '', text.lower())
-        return any(kw.lower() in text for kw in keywords)
+        cleaned_text = re.sub(r'[^a-zA-Z0-9]', '', text.lower())
+        return any(kw in cleaned_text for kw in keywords)
 
     def _has_verify_button(self, message):
         if message.components:
@@ -79,15 +80,18 @@ class Security:
                     for child in comp.children:
                         if hasattr(child, "label") and child.label.lower() == "verify":
                             return True
-                        if hasattr(child, "url") and "owobot.com?login=" in str(child.url):
+                        if hasattr(child, "url") and "https://owobot.com/captcha" in str(child.url):
                             return True
         return False
 
+    @commands.Cog.listener()
     async def on_message(self, message):
         if not self.enabled:
             return
+        
         if str(message.author.id) != self.monitor_id:
             return
+
         if self.bot.paused:
             return
 
@@ -102,6 +106,7 @@ class Security:
             embed_text = ' '.join(parts).lower()
 
         text_to_check = content + " " + embed_text
+        
 
         if self._contains_keyword(text_to_check, self.ban_keywords):
             self.bot.paused = True
@@ -114,12 +119,19 @@ class Security:
 
         captcha_detected = self._contains_keyword(text_to_check, self.captcha_keywords)
         verify_button = self._has_verify_button(message)
+        
         if captcha_detected or verify_button:
             self.bot.paused = True
             state.bot_paused = True
             self.bot.throttle_until = time.time() + 3600
             state.stats['last_captcha_msg'] = message.content
-            self.bot.log("ALARM", "CAPTCHA DETECTED! Bot paused, solve manually via dashboard.")
+            self.bot.log("ALARM", f"CAPTCHA DETECTED! (Reason: {'Keywords' if captcha_detected else 'Button'})")
             await self.play_beep()
             self._show_desktop_notification("Captcha Detected! Solve and resume manually via dashboard.")
-            self._send_webhook("⚠️ CAPTCHA DETECTED", f"Solve here: https://owobot.com/captcha\n\nMessage content: {message.content}")
+            self._send_webhook("CAPTCHA DETECTED", f"Solve here: https://owobot.com/captcha\n\nMessage content: {message.content}")
+
+async def setup(bot):
+    await bot.add_cog(Security(bot))
+
+
+
