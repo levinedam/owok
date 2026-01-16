@@ -1,6 +1,6 @@
 # This file is part of NeuraSelf-UwU.
 # Copyright (c) 2025-Present Routo
-
+#
 # NeuraSelf-UwU is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -40,9 +40,11 @@ class AutoOpen:
             return False
         
         name = cmd["cmd_name"]
-        cfg = self.bot.config.get('auto_use', {})
-        open_cfg = cfg.get('open', {})
-        amt = open_cfg.get('crate' if name == 'crate' else 'lootbox', 'all')
+        cfg = self.bot.config.get('commands', {}).get('open', {})
+        
+        sub_cfg = cfg.get(name, {})
+        amt = sub_cfg.get('type', 'all')
+        
         amt_str = str(amt).strip().lower()
         suffix = 'all' if amt_str in ['', 'all'] else str(amt)
         content = f"{cmd['cmd_name']} {suffix}"
@@ -51,30 +53,34 @@ class AutoOpen:
         return True
  
     async def on_message(self, message):
-        monitor_id = str(self.bot.config.get('monitor_bot_id', '408785106942164992'))
+        monitor_id = str(self.bot.config.get('core', {}).get('monitor_bot_id', '408785106942164992'))
         if str(message.author.id) != monitor_id:
             return
         if message.channel.id != self.bot.channel_id:
             return
  
-        cfg = self.bot.config.get('auto_use', {})
-        use_crate = cfg.get('autoCrate', False)
-        use_lootbox = cfg.get('autoLootbox', False)
+        cfg = self.bot.config.get('commands', {}).get('open', {})
+        
+        if not cfg.get('enabled', True):
+            return
+
+        use_crate = cfg.get('crate', {}).get('enabled', False)
+        use_lootbox = cfg.get('lootbox', {}).get('enabled', False)
  
         text = message.content
         lower = text.lower()
  
         if ("received a" in lower or "found a" in lower) and "weapon crate" in lower:
             if use_crate and time.time() >= self.cooldowns['crate']:
+                self.cooldowns['crate'] = time.time() + 10
                 await asyncio.sleep(1.2)
                 await self._send_cmd(self.crate_cmd)
-                self.cooldowns['crate'] = time.time() + 10
  
         if ("received a" in lower or "found a" in lower) and "lootbox" in lower:
             if use_lootbox and time.time() >= self.cooldowns['lootbox']:
+                self.cooldowns['lootbox'] = time.time() + 10
                 await asyncio.sleep(1.2)
                 await self._send_cmd(self.lootbox_cmd)
-                self.cooldowns['lootbox'] = time.time() + 10
  
         if "you don't have any lootboxes" in lower or "no lootboxes" in lower:
             self.cooldowns['lootbox'] = time.time() + 3600

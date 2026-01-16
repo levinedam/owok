@@ -1,6 +1,6 @@
 # This file is part of NeuraSelf-UwU.
 # Copyright (c) 2025-Present Routo
-
+#
 # NeuraSelf-UwU is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -47,14 +47,9 @@ def show_banner():
     console.print("\n")
     console.print("\n")
 
-
-
-
-
-
 def select_account():
     try:
-        with open('config/settings.json', 'r') as f:
+        with open('config/accounts.json', 'r') as f:
             config = json.load(f)
     except:
         return None, None
@@ -78,11 +73,18 @@ def select_account():
         pass
     return None, None
 
+def detect_platform():
+    is_termux = "TERMUX_VERSION" in os.environ or "com.termux" in os.environ.get("PREFIX", "")
+    platform = "Mobile (Termux)" if is_termux else "PC (Windows)"
+    console.print(f"[bold green]Detected Platform: {platform}[/bold green]")
+    return is_termux
+
 def run_dashboard():
     flask_app.run(host='0.0.0.0', port=8000, debug=False, use_reloader=False)
 
 async def main():
     show_banner()
+    detect_platform()
     token, channels = select_account()
     if not token or not channels: return
     dashboard_thread = threading.Thread(target=run_dashboard, daemon=True)

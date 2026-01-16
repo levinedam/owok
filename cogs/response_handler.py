@@ -1,6 +1,6 @@
 # This file is part of NeuraSelf-UwU.
 # Copyright (c) 2025-Present Routo
-
+#
 # NeuraSelf-UwU is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -47,7 +47,6 @@ class ResponseHandler(commands.Cog):
         full_content = self.bot.get_full_content(message)
         await self._handle_cooldowns(full_content, message)
         
-        # Always check for battle results in all OwO messages
         await self._handle_battle_results(full_content, message)
         
         if self.bot.is_message_for_me(message):
@@ -57,7 +56,7 @@ class ResponseHandler(commands.Cog):
     async def _handle_success(self, content, message):
         now = time.time()
         for cmd_type, triggers in self.success_triggers.items():
-            if cmd_type == 'battle': continue # Handled separately
+            if cmd_type == 'battle': continue 
             for trigger in triggers:
                 if trigger in content:
                     if now - self.last_success_time.get(cmd_type, 0) < 2.0: break
@@ -67,27 +66,27 @@ class ResponseHandler(commands.Cog):
                         state.stats['hunt_count'] = state.stats.get('hunt_count', 0) + 1
                         self.bot.log("SUCCESS", f"Hunt confirmed for {self.bot.display_name}")
                     elif cmd_type == 'curse':
-                        self.bot.log("SUCCESS", f"Curse confirmed for {self.bot.display_name}")
-                    break
+                        if self.bot.is_message_for_me(message, role="source", keyword="puts a curse on"):
+                            self.bot.log("SUCCESS", f"Curse confirmed for {self.bot.display_name}")
+                        else: continue
+                    elif cmd_type == 'cookie':
+                        if self.bot.is_message_for_me(message, role="target", keyword="got a cookie from"):
+                            self.bot.log("SUCCESS", f"Cookie confirmed for {self.bot.display_name}")
+                        else: continue
 
     async def _handle_battle_results(self, content, message):
-        # We need to catch both "goes into battle" and result embeds
         is_battle_msg = any(trigger in content for trigger in ['goes into battle', 'battle!', 'won in', 'lost in', 'streak:', 'you won', 'you lost'])
         if not is_battle_msg: return
 
-        # Identity check: verify it's for the bot (title or mention)
         is_for_me = self.bot.is_message_for_me(message)
         
         if is_for_me:
             now = time.time()
             if now - self.last_success_time.get('battle', 0) > 1.5:
-                # Increment count ONLY for wins/losses or starts
-                # But don't double count start vs result too quickly
                 self.last_success_time['battle'] = now
                 state.stats['battle_count'] = state.stats.get('battle_count', 0) + 1
                 self.bot.log("SUCCESS", f"Battle confirmed for {self.bot.display_name}")
         else:
-            # Debug log to see if we're ignoring valid battles
             pass
 
     async def _handle_cooldowns(self, content, message):

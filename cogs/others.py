@@ -1,6 +1,6 @@
 # This file is part of NeuraSelf-UwU.
 # Copyright (c) 2025-Present Routo
-
+#
 # NeuraSelf-UwU is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -34,7 +34,27 @@ class Others:
         emojis = pattern.findall(text)
         return [self.emoji_dict[char]["name"] for char in emojis if char in self.emoji_dict]
 
+    async def _auto_accept_rules(self, message):
+        if message.channel.id != self.bot.channel_id:
+            return
+
+        content = message.content.lower()
+        if "**you must accept these rules to use the bot!**" in content:
+            if message.components:
+                await asyncio.sleep(self.bot.random.uniform(0.6, 1.7))
+                try:
+                    comp = message.components[0]
+                    if hasattr(comp, 'children'):
+                        btn = comp.children[0]
+                        if not btn.disabled:
+                            await btn.click()
+                            self.bot.log("SUCCESS", "Auto-Accepted OwO Rules")
+                except Exception as e:
+                    self.bot.log("ERROR", f"Failed to accept rules: {e}")
+
     async def on_message(self, message):
+        await self._auto_accept_rules(message)
+
         monitor_id = str(self.bot.config.get('monitor_bot_id', '408785106942164992'))
         if str(message.author.id) != monitor_id:
             return
@@ -45,8 +65,10 @@ class Others:
         content = message.content.lower()
         
         if "you currently have" in content and "cowoncy" in content:
+            if not self.bot.is_message_for_me(message, role="header"):
+                return
             try:
-                cash_match = re.search(r'you currently have[^\d]*(\d{1,3}(?:,\d{3})*)', message.content)
+                cash_match = re.search(r'you currently have[^\d]*(\d{1,3}(?:,\d{3})*)', message.content.lower())
                 if cash_match:
                     cash_str = cash_match.group(1).replace(',', '')
                     state.stats['current_cash'] = int(cash_str)
@@ -58,11 +80,15 @@ class Others:
 
 
         elif "create a team with the command" in content:
+            if not self.bot.is_message_for_me(message):
+                return
             self.zoo = True
             await self.bot.send_message(f"{self.bot.prefix}zoo")
             self.bot.log("SYS", "Zoo triggered")
 
         elif "'s zoo! **" in content and self.zoo:
+            if not self.bot.is_message_for_me(message, role="header"):
+                return
             animals = self.get_emoji_names(message.content)
             animals.reverse()
             self.zoo = False

@@ -1,4 +1,4 @@
- <!-- This file is part of NeuraSelf-UwU.
+<!-- This file is part of NeuraSelf-UwU.
  Copyright (c) 2025-Present Routo
 
  NeuraSelf-UwU is free software: you can redistribute it and/or modify
@@ -20,9 +20,11 @@ along with NeuraSelf-UwU. If not, see <https://www.gnu.org/licenses/>. -->
 Sorry for this bad inline code bcz sometimes i don't want  to move my hands from keyboard to create a new file.
 
 -->
+
 <head>
     <meta charset="UTF-8">
     <title>Neura Self</title>
+    <link rel="icon" type="image/x-icon" href="/static/assets/neura.ico">
     <link
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@400;600&family=Roboto+Mono:wght@400;500&display=swap"
         rel="stylesheet">
@@ -67,11 +69,35 @@ Sorry for this bad inline code bcz sometimes i don't want  to move my hands from
 </head>
 
 <body>
+
+    <!-- Mobile Menu Toggle Button -->
+    <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- Mobile Top Controls -->
+    <div class="mobile-top-controls">
+        <button class="mobile-control-btn gold" onclick="action('cash', this)" title="Check Cash">
+            <i class="fa-solid fa-coins"></i>
+        </button>
+        <button class="mobile-control-btn green" onclick="action('start', this)" title="Start Bot">
+            <i class="fa-solid fa-play"></i>
+        </button>
+        <button class="mobile-control-btn red" onclick="action('stop', this)" title="Stop Bot">
+            <i class="fa-solid fa-stop"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" onclick="toggleMobileMenu()"></div>
+
     <div class="app-shell" style="display:flex; height:100vh;">
         <!-- SIDEBAR -->
         <aside class="sidebar">
             <div class="brand">
-                <i class="fa-brands fa-hubspot brand-icon" style="color:#ff1f1f"></i>
+                <img src="/static/assets/neuralogo.png" alt="NeuraSelf" style="height: 32px; margin-right: 8px;">
                 <span class="brand-main"
                     style="background:linear-gradient(90deg, #ff1f1f, #880000); background-clip:text; -webkit-background-clip:text; -webkit-text-fill-color:transparent;">NEURA</span>
                 <span class="brand-sub" style="color:#ff1f1f">SELF</span>
@@ -83,8 +109,7 @@ Sorry for this bad inline code bcz sometimes i don't want  to move my hands from
                 <a class="nav-item" onclick="nav('config', this)"><i class="fa-solid fa-sliders"></i> Configuration</a>
                 <a class="nav-item" onclick="nav('security', this)"><i class="fa-solid fa-shield-halved"></i>
                     Security</a>
-                <a class="nav-item" onclick="nav('captcha', this)"><i class="fa-solid fa-puzzle-piece"></i>
-                    AutoHuntCode</a>
+
                 <a class="nav-item" onclick="nav('history', this)"><i class="fa-solid fa-clock-rotate-left"></i>
                     History</a>
                 <a class="nav-item" onclick="nav('logs', this)"><i class="fa-solid fa-terminal"></i> Terminal</a>
@@ -100,8 +125,8 @@ Sorry for this bad inline code bcz sometimes i don't want  to move my hands from
                             title="GitHub"></i></a>
                     <a href="https://discord.gg/3gYUZHRjKC" target="_blank"><i class="fa-brands fa-discord social-btn"
                             title="Discord"></i></a>
-                    <a href="https://www.youtube.com/@dev1-9?sub_confirmation=1" target="_blank"><i class="fa-brands fa-youtube social-btn"
-                            title="YouTube"></i></a>
+                    <a href="https://www.youtube.com/@dev1-9?sub_confirmation=1" target="_blank"><i
+                            class="fa-brands fa-youtube social-btn" title="YouTube"></i></a>
                 </div>
                 <div class="version">v1.0.0</div>
             </div>
@@ -149,7 +174,7 @@ Sorry for this bad inline code bcz sometimes i don't want  to move my hands from
                         </div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-icon cmds"><i class="fa-solid fa-sword"></i></div>
+                        <div class="kpi-icon cmds"><i class="fa-brands fa-battle-net"></i></div>
                         <div class="kpi-data">
                             <h3>Battles Today</h3>
                             <p id="battlesToday">0</p>
@@ -160,6 +185,13 @@ Sorry for this bad inline code bcz sometimes i don't want  to move my hands from
                         <div class="kpi-data">
                             <h3>CPM</h3>
                             <p id="cpm">0</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon cmds"><i class="fa-solid fa-ghost"></i></div>
+                        <div class="kpi-data">
+                            <h3>OwO Sent</h3>
+                            <p id="totalOwO">0</p>
                         </div>
                     </div>
                 </div>
@@ -180,15 +212,15 @@ Sorry for this bad inline code bcz sometimes i don't want  to move my hands from
             <div id="config" class="view">
                 <div class="top-bar">
                     <h1>Configuration</h1>
-                    <button class="btn-control green" onclick="saveConfig()" style="margin-right:10px;">
-                        <i class="fa-solid fa-floppy-disk"></i> SAVE
-                    </button>
-                    <button class="btn-control" onclick="loadConfig()">
-                        <i class="fa-solid fa-rotate"></i> RELOAD
-                    </button>
+                    <div class="top-controls">
+                        <button class="btn-control green" onclick="saveAllConfigs()">
+                            <i class="fa-solid fa-floppy-disk"></i> SAVE SETTINGS
+                        </button>
+                    </div>
                 </div>
+
                 <div id="settings-grid" class="settings-grid-layout">
-                    <!-- Configuration cards will be injected here -->
+                    <!-- Configuration cards will be injected here dynamically -->
                 </div>
             </div>
 
@@ -196,9 +228,11 @@ Sorry for this bad inline code bcz sometimes i don't want  to move my hands from
             <div id="security" class="view">
                 <div class="top-bar">
                     <h1>Security Center</h1>
+                    <button class="btn-control green" onclick="resumeBot()"><i class="fa-solid fa-play"></i> RESUME
+                        BOT</button>
                 </div>
 
-                <div id="securityAlert" class="alert-box" style="display:none;">
+                <div id="securityAlert" class="alert-box" style="display:none; margin-bottom: 20px;">
                     <div class="alert-msg">
                         <i class="fa-solid fa-triangle-exclamation"></i> SECURITY TRIGGERED: BOT PAUSED
                     </div>
@@ -206,121 +240,20 @@ Sorry for this bad inline code bcz sometimes i don't want  to move my hands from
                         style="color:#aaa; font-family:var(--font-mono); margin-bottom:20px; font-size:0.9rem; border:1px solid #333; padding:10px; border-radius:4px; max-width:80%; text-align:center;">
                         <!-- Last Captcha Message -->
                     </div>
-                    <div style="display:flex; gap:10px;">
-                        <button class="btn-control gold" onclick="window.open('https://owobot.com/captcha', '_blank')"
-                            style="font-size:1.1rem; padding:12px 24px;">
-                            <i class="fa-solid fa-up-right-from-square"></i> SOLVE CAPTCHA
-                        </button>
-                        <button class="btn-control green" onclick="resumeBot()"
-                            style="font-size:1.1rem; padding:12px 24px;">
-                            <i class="fa-solid fa-play"></i> RESUME BOT
-                        </button>
-                    </div>
                 </div>
 
                 <div class="security-stats">
                     <div class="sec-stat-box">
                         <div class="sec-val" id="sec-captchas">0</div>
-                        <div class="sec-lbl">Captchas Solved</div>
+                        <div class="sec-lbl">Solved</div>
                     </div>
                     <div class="sec-stat-box">
                         <div class="sec-val" id="sec-bans" style="color:var(--danger)">0</div>
-                        <div class="sec-lbl">Bans Detected</div>
+                        <div class="sec-lbl">Bans</div>
                     </div>
                     <div class="sec-stat-box">
                         <div class="sec-val" id="sec-warns" style="color:var(--warning)">0</div>
-                        <div class="sec-lbl">Warnings</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- AUTOHUNTCODE / CAPTCHA SOLVER -->
-            <div id="captcha" class="view">
-                <div class="top-bar">
-                    <h1>🧩 AutoHunt Captcha Solver</h1>
-                    <button class="btn-control" onclick="refreshCaptcha()" style="background: var(--primary)">
-                        <i class="fa-solid fa-rotate"></i> REFRESH
-                    </button>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px;">
-                    <!-- Captcha Display Card -->
-                    <div class="module-card" style="min-height: 400px;">
-                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-                            <i class="fa-solid fa-image" style="font-size: 1.5em; color: var(--primary)"></i>
-                            <h2 style="margin: 0;">Captcha Image</h2>
-                        </div>
-
-                        <div id="captchaDisplay"
-                            style="background: #0a0a0c; border: 2px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; min-height: 250px; display: flex; align-items: center; justify-content: center;">
-                            <div style="color: var(--text-muted);">
-                                <i class="fa-solid fa-hourglass-half fa-2x"
-                                    style="color: var(--primary); margin-bottom: 15px;"></i>
-                                <p style="margin: 0;">Waiting for captcha...</p>
-                                <p style="font-size: 0.9em; margin-top: 10px;">HuntBot will trigger a captcha that
-                                    appears here</p>
-                            </div>
-                        </div>
-
-                        <div
-                            style="margin-top: 20px; padding: 15px; background: var(--primary-dim); border-left: 3px solid var(--primary); border-radius: 8px;">
-                            <p style="margin: 0; font-size: 0.9em; color: var(--text-main);">
-                                <i class="fa-solid fa-info-circle"></i>
-                                When HuntBot triggers a captcha, the image will appear here automatically
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Solver Input Card -->
-                    <div class="module-card">
-                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-                            <i class="fa-solid fa-keyboard" style="font-size: 1.5em; color: var(--success)"></i>
-                            <h2 style="margin: 0;">Submit Solution</h2>
-                        </div>
-
-                        <div style="margin-bottom: 12px; color: var(--text-muted); font-size: 0.9em;">
-                            Command: <code id="captchaCommand">Waiting...</code>
-                        </div>
-
-                        <div style="margin-bottom: 20px;">
-                            <label style="display: block; margin-bottom: 10px; font-weight: 600;">Captcha Code:</label>
-                            <input type="text" id="captchaCode" placeholder="Enter the code from the image..."
-                                style="width: 100%; padding: 15px; background: #0a0a0c; border: 2px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 1.1em; font-family: var(--font-mono); text-align: center; letter-spacing: 2px;"
-                                onkeypress="if(event.key==='Enter') submitCaptcha()">
-                        </div>
-
-                        <button onclick="submitCaptcha()" class="btn-save"
-                            style="position: static; width: 100%; margin-bottom: 20px; padding: 18px; font-size: 1.1em;">
-                            <i class="fa-solid fa-paper-plane"></i> SUBMIT SOLUTION
-                        </button>
-
-                        <div id="captchaResult"
-                            style="margin-top: 15px; padding: 15px; border-radius: 8px; display: none;"></div>
-
-                        <!-- Stats Card -->
-                        <div
-                            style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #1a1a1c 0%, #0a0a0c 100%); border: 1px solid var(--border); border-radius: 12px;">
-                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
-                                <i class="fa-solid fa-chart-line" style="color: var(--primary)"></i>
-                                <h3 style="margin: 0;">Today's Statistics</h3>
-                            </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                                <div
-                                    style="text-align: center; padding: 15px; background: rgba(255,31,31,0.1); border-radius: 8px;">
-                                    <div style="font-size: 2em; font-weight: 700; color: var(--primary);"
-                                        id="captchaSolved">0</div>
-                                    <div style="font-size: 0.9em; color: var(--text-muted); margin-top: 5px;">Solved
-                                    </div>
-                                </div>
-                                <div
-                                    style="text-align: center; padding: 15px; background: rgba(0,255,136,0.1); border-radius: 8px;">
-                                    <div style="font-size: 2em; font-weight: 700; color: var(--success);"
-                                        id="captchaSuccess">100%</div>
-                                    <div style="font-size: 0.9em; color: var(--text-muted); margin-top: 5px;">Success
-                                        Rate</div>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="sec-lbl">Warns</div>
                     </div>
                 </div>
             </div>
@@ -333,76 +266,55 @@ Sorry for this bad inline code bcz sometimes i don't want  to move my hands from
                         <select id="session-select" class="session-select" onchange="renderSessionChart()">
                             <option value="all">ALL SESSIONS</option>
                         </select>
-                        <button class="btn-control input-dark" onclick="loadAnalytics()"><i
-                                class="fa-solid fa-sync"></i>
+                        <button class="btn-control input-dark" onclick="loadHistory()"><i class="fa-solid fa-sync"></i>
                             REFRESH DATA</button>
                     </div>
                 </div>
 
-                <!-- ANALYTICS DASHBOARD -->
                 <div class="analytics-grid"
-                    style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:20px; padding:20px;">
-                    <!-- Totals Cards -->
-                    <div class="kpi-card"
-                        style="background:var(--bg-card); padding:20px; border-radius:12px; border:1px solid var(--border);">
+                    style="display:grid; grid-template-columns: repeat(4, 1fr); gap:20px; padding:0 20px 20px 20px;">
+                    <div class="kpi-card">
                         <div style="color:var(--text-muted); font-size:0.9em;">TOTAL SESSIONS</div>
                         <div id="total-sessions" style="font-size:2em; font-weight:bold; color:var(--primary);">0</div>
                     </div>
-                    <div class="kpi-card"
-                        style="background:var(--bg-card); padding:20px; border-radius:12px; border:1px solid var(--border);">
+                    <div class="kpi-card">
                         <div style="color:var(--text-muted); font-size:0.9em;">ALL-TIME HUNTS</div>
                         <div id="total-hunts" style="font-size:2em; font-weight:bold; color:var(--success);">0</div>
                     </div>
-                    <div class="kpi-card"
-                        style="background:var(--bg-card); padding:20px; border-radius:12px; border:1px solid var(--border);">
+                    <div class="kpi-card">
                         <div style="color:var(--text-muted); font-size:0.9em;">ALL-TIME BATTLES</div>
                         <div id="total-battles" style="font-size:2em; font-weight:bold; color:#3b82f6;">0</div>
                     </div>
-                    <div class="kpi-card"
-                        style="background:var(--bg-card); padding:20px; border-radius:12px; border:1px solid var(--border);">
+                    <div class="kpi-card">
                         <div style="color:var(--text-muted); font-size:0.9em;">TOTAL COMMANDS</div>
                         <div id="total-cmds" style="font-size:2em; font-weight:bold; color:#fff;">0</div>
                     </div>
-
-                    <!-- Charts Row 1 -->
-                    <div
-                        style="grid-column: span 2; background:var(--bg-card); border-radius:12px; padding:20px; border:1px solid var(--border);">
-                        <h3 style="margin:0 0 15px 0; color:var(--text-main); font-size:1.1em;"><i
-                                class="fa-solid fa-chart-line"></i> Cash History</h3>
-                        <div style="height:250px;">
-                            <canvas id="cashHistoryChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div
-                        style="grid-column: span 2; background:var(--bg-card); border-radius:12px; padding:20px; border:1px solid var(--border);">
-                        <h3 style="margin:0 0 15px 0; color:var(--text-main); font-size:1.1em;"><i
-                                class="fa-solid fa-chart-simple"></i> Session Performance</h3>
-                        <div class="chart-scroll-wrapper">
-                            <canvas id="sessionChart"></canvas>
-                        </div>
-                    </div>
                 </div>
 
-                <div class="top-bar" style="border-top:1px solid var(--border); padding-top:20px; margin-top:10px;">
-                    <h2><i class="fa-solid fa-terminal"></i> Live Session Logs</h2>
+                <div style="display:flex; gap:20px; height:300px; padding:0 20px 20px 20px;">
+                    <div
+                        style="flex:1; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:20px;">
+                        <canvas id="sessionChart"></canvas>
+                    </div>
+                    <div
+                        style="flex:1; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:20px;">
+                        <canvas id="cashHistoryChart"></canvas>
+                    </div>
                 </div>
 
                 <div style="padding:0 20px 10px 20px; display:flex; gap:10px;">
-                    <button class="badge" onclick="filterHistory('all')">ALL</button>
-                    <button class="badge success" onclick="filterHistory('CMD')">COMMANDS</button>
-                    <button class="badge info" onclick="filterHistory('SYS')">SYSTEM</button>
-                    <button class="badge warning" onclick="filterHistory('SECURITY')">SECURITY</button>
+                    <button class="badge active" onclick="filterHistory('all', this)">ALL</button>
+                    <button class="badge success" onclick="filterHistory('CMD', this)">COMMANDS</button>
+                    <button class="badge info" onclick="filterHistory('SYS', this)">SYSTEM</button>
+                    <button class="badge warning" onclick="filterHistory('SECURITY', this)">SECURITY</button>
                 </div>
 
                 <div class="history-container" style="height:400px; padding:20px;">
-                    <div id="history-feed" class="terminal-history">
-                        <!-- Logs here -->
-                    </div>
+                    <div id="history-feed" class="terminal-history"></div>
                 </div>
             </div>
 
-            <!-- LOGS -->
+            <!-- TERMINAL -->
             <div id="logs" class="view">
                 <div class="top-bar">
                     <h1>System Terminal</h1>
@@ -412,881 +324,264 @@ Sorry for this bad inline code bcz sometimes i don't want  to move my hands from
                 </div>
                 <div id="term" class="terminal-window"></div>
             </div>
-
         </main>
     </div>
 
     <script>
-        // --- CHARTS ---
-        let distChart = null;
-        let lineChart = null;
+        // --- STATE ---
+        let currentConfig = {}, globalAnalyticsData = null;
+        let distChart = null, lineChart = null, sessChart = null, cashChart = null;
 
-        try {
-            const c1 = document.getElementById('distChart').getContext('2d');
-            distChart = new Chart(c1, {
-                type: 'doughnut',
-                data: { labels: ['Hunt', 'Battle', 'Others'], datasets: [{ data: [1, 1, 1], backgroundColor: ['#ff1f1f', '#444', '#3b82f6'], borderWidth: 0 }] },
-                options: { cutout: '75%', plugins: { legend: { position: 'right' } } }
-            });
-
-            const c2 = document.getElementById('lineChart').getContext('2d');
-            lineChart = new Chart(c2, {
-                type: 'line',
-                data: { labels: Array(20).fill(''), datasets: [{ data: Array(20).fill(0), borderColor: '#ff1f1f', backgroundColor: 'rgba(255,31,31,0.1)', fill: true, pointRadius: 0, tension: 0.4 }] },
-                options: { scales: { x: { display: false }, y: { grid: { color: '#222' } } }, plugins: { legend: { display: false } } }
-            });
-        } catch (e) {
-            console.warn("Charts blocked:", e);
-            document.getElementById('distChart').parentElement.innerText = "Charts Unavailable (CDN Blocked)";
-            document.getElementById('lineChart').parentElement.innerText = "Charts Unavailable (CDN Blocked)";
-        }
-
-        // --- APP STATE ---
-        let currentConfig = {};
-
+        // --- NAVIGATION ---
         function nav(id, el) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(id).classList.add('active-view');
             el.classList.add('active');
+            if (window.innerWidth <= 768) toggleMobileMenu();
 
-            // Clear any existing interval for this view
-            if (window.currentViewInterval) {
-                clearInterval(window.currentViewInterval);
-            }
-
-            if (id === 'config') {
-                // Small delay to ensure DOM is ready
-                setTimeout(() => loadConfig(), 50);
-            }
+            if (id === 'config') loadConfig();
             if (id === 'history') loadHistory();
         }
 
-        let pendingCashRequest = false;
-        let lastKnownCashUpdate = 0;
-        let cashRequestStartedAt = 0; // Timestamp when we clicked "Check Cash"
-        let pendingCaptchaRequest = false;
-        let activeCashElement = null;
-        let cashOriginalHTML = "";
-
-        async function action(act, el) {
-            const original = el ? el.innerHTML : null;
-            if (el) {
-                el.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SENDING...';
-                el.disabled = true;
-            }
-            if (act === 'cash') {
-                pendingCashRequest = true;
-                cashRequestStartedAt = lastKnownCashUpdate;
-                activeCashElement = el;
-                cashOriginalHTML = original;
-
-                // Safety timeout: 15 seconds to prevent permanent "SENDING..."
-                setTimeout(() => {
-                    if (pendingCashRequest && activeCashElement === el) {
-                        console.warn("Cash update timed out, resetting button.");
-                        resetCashButton();
-                    }
-                }, 15000);
-
-                // If it's the KPI card, don't wipe the title, just show a small spinner in the value
-                if (el && el.classList.contains('kpi-data')) {
-                    const valEl = el.querySelector('#cash');
-                    if (valEl) valEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-                }
-            }
-
-            try {
-                await fetch('/api/control', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: act })
-                });
-            } finally {
-                if (el && act !== 'cash') {
-                    setTimeout(() => {
-                        el.innerHTML = original;
-                        el.disabled = false;
-                    }, 1500);
-                }
-            }
+        function toggleMobileMenu() {
+            const s = document.querySelector('.sidebar'), o = document.querySelector('.sidebar-overlay'), t = document.querySelector('.mobile-menu-toggle');
+            s.classList.toggle('active'); o.classList.toggle('active'); t.classList.toggle('active');
+            document.body.style.overflow = s.classList.contains('active') ? 'hidden' : '';
         }
 
-        function resetCashButton() {
-            if (activeCashElement) {
-                activeCashElement.innerHTML = cashOriginalHTML;
-                activeCashElement.disabled = false;
-            }
-            pendingCashRequest = false;
-        }
-
-        function resumeBot() {
-            fetch('/api/security', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'resume' })
-            }).then(() => {
-                document.getElementById('securityAlert').style.display = 'none';
-                alert("Resumed!");
-            });
-        }
-
-        function update() {
-            fetch('/api/stats').then(r => {
-                if (!r.ok) throw new Error("Stats API Error");
-                return r.json();
-            }).then(d => {
-                try {
-                    // KPIs
-                    if (document.getElementById('cash')) document.getElementById('cash').innerText = (d.cash || 0).toLocaleString();
-                    if (document.getElementById('uptimeDisplay')) document.getElementById('uptimeDisplay').innerText = d.uptime || "00:00:00";
-                    if (document.getElementById('huntsToday')) document.getElementById('huntsToday').innerText = d.chart_data ? d.chart_data.hunt : 0;
-                    if (document.getElementById('battlesToday')) document.getElementById('battlesToday').innerText = d.chart_data ? d.chart_data.battle : 0;
-                    if (document.getElementById('cpm')) document.getElementById('cpm').innerText = d.chart_data ? d.chart_data.perf_bpm : 0;
-
-                    if (d.analytics) {
-                        if (document.getElementById('cph-val')) document.getElementById('cph-val').innerText = d.analytics.cph || 0;
-                        if (document.getElementById('gems-val')) document.getElementById('gems-val').innerText = d.analytics.gems_used || 0;
-                    }
-
-                    // --- Handle persistent button states ---
-                    if (pendingCashRequest && d.system && d.system.last_cash_update > cashRequestStartedAt) {
-                        resetCashButton();
-                    }
-
-                    if (d.system && d.system.last_cash_update > lastKnownCashUpdate) {
-                        lastKnownCashUpdate = d.system.last_cash_update;
-                    }
-
-                    // Status
-                    const statEl = document.getElementById('botStatus');
-                    const dot = document.getElementById('statusDot');
-                    if (statEl && dot) {
-                        statEl.innerText = d.status || "OFFLINE";
-                        if (d.status === "PAUSED") {
-                            dot.className = "ping-dot paused";
-                            if (document.getElementById('securityAlert')) document.getElementById('securityAlert').style.display = 'flex';
-                            if (d.security && d.security.last_message && document.getElementById('captchaMsg')) {
-                                document.getElementById('captchaMsg').innerText = d.security.last_message;
-                            }
-                        } else {
-                            dot.className = "ping-dot";
-                            if (document.getElementById('securityAlert')) document.getElementById('securityAlert').style.display = 'none';
-                        }
-                        if (d.bot && d.bot.throttled) {
-                            statEl.innerText = `THROTTLED (${d.bot.cooldown_remaining}s)`;
-                        }
-                    }
-
-                    // Security Stats
-                    if (d.security) {
-                        if (document.getElementById('sec-captchas')) document.getElementById('sec-captchas').innerText = d.security.captchas || 0;
-                        if (document.getElementById('sec-bans')) document.getElementById('sec-bans').innerText = d.security.bans || 0;
-                        if (document.getElementById('sec-warns')) document.getElementById('sec-warns').innerText = d.security.warnings || 0;
-                    }
-
-                    // Logs
-                    renderLogs(d.logs || []);
-
-                    // Charts
-                    if (distChart && lineChart && d.chart_data) {
-                        let [h, b] = [d.chart_data.hunt, d.chart_data.battle];
-                        let o = Math.max(0, (d.chart_data.total || 0) - (h + b));
-                        if (h + b + o > 0) {
-                            distChart.data.datasets[0].data = [h, b, o];
-                            distChart.data.labels = ['Hunt', 'Battle', 'Others'];
-                            distChart.data.datasets[0].backgroundColor = ['#ff1f1f', '#e2e8f0', '#3b82f6'];
-                        } else {
-                            distChart.data.datasets[0].data = [1];
-                            distChart.data.labels = ['No Data'];
-                            distChart.data.datasets[0].backgroundColor = ['#222'];
-                        }
-                        distChart.update();
-
-                        lineChart.data.datasets[0].data.shift();
-                        lineChart.data.datasets[0].data.push(d.chart_data.perf_bpm || 0);
-                        lineChart.update();
-                    }
-                } catch (err) {
-                    console.error("Update error:", err);
-                }
-            }).catch(e => console.error("Fetch stats failed:", e));
-        }
-        setInterval(update, 1000);
-
-        let lastLogCount = 0;
-        function renderLogs(logs) {
-            const t = document.getElementById('term');
-            if (!t) return;
-
-            const filtered = logs.filter(l => l && l.type !== 'DEBUG' && !String(l.message).includes('OwO MSG'));
-            if (filtered.length === lastLogCount) return; // Skip if no change
-
-            lastLogCount = filtered.length;
-            const scrollAtBottom = t.scrollHeight - t.scrollTop <= t.clientHeight + 50;
-
-            t.innerHTML = filtered.slice(0, 500).reverse().map(l => {
-                const color = l.color || '#ccc';
-                const badge = l.type === 'CMD' ? 'tag-cmd' : (l.type === 'ALARM' ? 'tag-security' : 'tag-sys');
-                // Format the time nicely
-                let timeStr = l.time || new Date(l.timestamp * 1000).toLocaleTimeString();
-
-                return `<div class="history-item">
-                    <span class="history-time">[${timeStr}]</span>
-                    <span class="history-tag ${badge}" style="background-color:${color}33; color:${color}; border: 1px solid ${color}">${l.type}</span>
-                    <span class="history-msg" style="color:#ffffff">${l.message}</span>
-                 </div>`;
-            }).join('');
-
-            // Auto-scroll to bottom if we were already there
-            if (scrollAtBottom) {
-                t.scrollTop = t.scrollHeight;
-            }
-        }
-
-        // NEW HELPER FUNCTION FOR FIELD RENDERING
-        function renderField(fullPath, field, value) {
-            let html = '';
-
-            if (field.type === 'toggle') {
-                const statusClass = value ? 'on' : 'off';
-
-                // Color Logic for Tiers
-                let labelStyle = "display:block; margin-bottom:4px;";
-                const txt = field.l || 'Enabled';
-
-                if (txt === 'Common') labelStyle += "color:#95a5a6; font-weight:bold;";         // Gray
-                else if (txt === 'Uncommon') labelStyle += "color:#2ecc71; font-weight:bold;";  // Green
-                else if (txt === 'Rare') labelStyle += "color:#3498db; font-weight:bold;";      // Blue
-                else if (txt === 'Epic') labelStyle += "color:#9b59b6; font-weight:bold;";      // Purple
-                else if (txt === 'Legendary') labelStyle += "color:#f1c40f; font-weight:bold text-shadow:0 0 5px #f1c40f;"; // Gold
-                else if (txt === 'Mythical') labelStyle += "color:#e91e63; font-weight:bold; text-shadow:0 0 5px #e91e63;"; // Red/Pink
-                else if (txt === 'Fabled') labelStyle += "color:#00e5ff; font-weight:bold; text-shadow:0 0 8px #00e5ff;";   // Cyan/Bright
-
-                html += `
-                <div class="field-group" style="margin-top:10px;">
-                    <label class="field-label" style="${labelStyle}">${field.l || 'Enabled'}</label>
-                    <div class="module-toggle ${statusClass}" onclick="toggleMod('${fullPath}', this)">
-                        <i class="fa-solid ${value ? 'fa-toggle-on' : 'fa-toggle-off'}"></i>
-                        ${value ? 'ENABLED' : 'DISABLED'}
-                    </div>
-                </div>`;
-            } else if (field.type === 'range') {
-                const minVal = Array.isArray(value) ? value[0] : 0;
-                const maxVal = Array.isArray(value) ? value[1] : 0;
-                html += `
-                <div class="field-row" style="margin-top:10px;">
-                    <div class="field-group">
-                        <label class="field-label">${field.l || 'Min Delay'}</label>
-                        <input type="number" class="field-input" value="${minVal}" 
-                            onchange="updateArrVal('${fullPath}', 0, this.value)">
-                    </div>
-                    <div class="field-group">
-                        <label class="field-label">Max Delay</label>
-                        <input type="number" class="field-input" value="${maxVal}" 
-                            onchange="updateArrVal('${fullPath}', 1, this.value)">
-                    </div>
-                </div>`;
-            } else if (field.type === 'array') {
-                html += `
-                <div class="array-manager" style="margin-top:10px;">
-                    <label class="field-label">${field.l}</label>
-                    <div id="arr-${fullPath.replace(/\./g, '-')}">
-                        ${(value || []).map((v, i) => `
-                            <div class="array-row">
-                                <input type="text" class="field-input" value="${v}" 
-                                    onchange="updateDeepArr('${fullPath}', ${i}, this.value)">
-                                <button class="btn-control red btn-icon-sm" 
-                                    onclick="popArr('${fullPath}', ${i})" title="Remove">
-                                    <i class="fa-solid fa-xmark"></i>
-                                </button>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <button class="btn-control input-dark btn-icon-sm" style="width:100%" 
-                        onclick="pushArr('${fullPath}')" title="Add ${field.l}">
-                        <i class="fa-solid fa-plus"></i> ADD ${field.l.toUpperCase()}
-                    </button>
-                </div>`;
-            } else if (field.type === 'password') {
-                html += `
-                <div class="field-group" style="margin-top:10px;">
-                    <label class="field-label">${field.l || field.p}</label>
-                    <input type="password" class="field-input" value="${value}" 
-                        onchange="updateDeepVal('${fullPath}', this.value)" 
-                        placeholder="Enter ${field.l || field.p}">
-                </div>`;
-            } else {
-                html += `
-                <div class="field-group" style="margin-top:10px;">
-                    <label class="field-label">${field.l || field.p}</label>
-                    <input type="text" class="field-input" value="${value}" 
-                        onchange="updateDeepVal('${fullPath}', this.value)">
-                </div>`;
-            }
-
-            return html;
+        // --- CONFIG MANAGER ---
+        async function loadConfig() {
+            const r = await fetch('/api/settings');
+            currentConfig = await r.json();
+            renderSettings(currentConfig);
         }
 
         function renderSettings(cfg) {
-            if (!cfg) return;
             const grid = document.getElementById('settings-grid');
-
-            // CLEAR PREVIOUS CONTENT FIRST - FIXES DUPLICATE BUTTONS
             grid.innerHTML = '';
 
-            // CORRECTED CONFIG MAPPING
-            const modules = [
-                // --- CORE ---
-                {
-                    id: 'CORE',
-                    title: 'Core Bot',
-                    path: 'core',
-                    fields: [
-                        { p: 'prefix', l: 'Prefix' },
-                        { p: 'monitor_bot_id', l: 'Monitor Bot ID' },
-                        { p: 'channel_id', l: 'Channel ID' }
-                    ]
-                },
-                // --- ACCOUNTS ---
-                {
-                    id: 'ACCOUNTS',
-                    title: 'Account Manager',
-                    path: 'accounts',
-                    fields: [
-                        {
-                            p: '0',
-                            l: 'Primary Account',
-                            type: 'account',
-                            fields: [
-                                { p: 'token', l: 'Token', type: 'password' },
-                                { p: 'channels', l: 'Channels', type: 'array' },
-                                { p: 'enabled', l: 'Enabled', type: 'toggle' }
-                            ]
-                        }
-                    ]
-                },
-                // --- HUNT MODULE ---
-                {
-                    id: 'HUNT',
-                    title: 'Hunt',
-                    path: 'commands.hunt',
-                    fields: [
-                        { p: 'enabled', type: 'toggle' },
-                        { p: 'cooldown', type: 'range', l: 'Delay Range (s)' },
-                        { p: 'useShortForm', l: 'Use Short Form', type: 'toggle' }
-                    ]
-                },
-                // --- BATTLE MODULE ---
-                {
-                    id: 'BATTLE',
-                    title: 'Battle',
-                    path: 'commands.battle',
-                    fields: [
-                        { p: 'enabled', type: 'toggle' },
-                        { p: 'cooldown', type: 'range', l: 'Delay Range (s)' },
-                        { p: 'useShortForm', l: 'Use Short Form', type: 'toggle' }
-                    ]
-                },
-                // --- OWO MODULE ---
-                {
-                    id: 'OWO',
-                    title: 'OwO Cmd',
-                    path: 'commands.owo',
-                    fields: [
-                        { p: 'enabled', type: 'toggle' },
-                        { p: 'cooldown', type: 'range', l: 'Delay Range (s)' }
-                    ]
-                },
-                // --- DAILY ---
-                {
-                    id: 'DAILY',
-                    title: 'Auto Daily',
-                    path: 'commands.daily',
-                    fields: [
-                        { p: 'enabled', type: 'toggle' }
-                    ]
-                },
-                // --- CURSE ---
-                {
-                    id: 'CURSE',
-                    title: 'Auto Curse',
-                    path: 'commands.curse',
-                    fields: [
-                        { p: 'enabled', type: 'toggle' },
-                        { p: 'cooldown', type: 'range', l: 'Delay Range (s)' },
-                        { p: 'targets', l: 'Target IDs', type: 'array' },
-                        { p: 'pingUser', l: 'Ping User', type: 'toggle' }
-                    ]
-                },
-                // --- COOKIE ---
-                {
-                    id: 'COOKIE',
-                    title: 'Auto Cookie',
-                    path: 'commands.cookie',
-                    fields: [
-                        { p: 'enabled', type: 'toggle' },
-                        { p: 'userid', l: 'Target User ID' },
-                        { p: 'pingUser', l: 'Ping User', type: 'toggle' }
-                    ]
-                },
-                // --- COINFLIP ---
-                {
-                    id: 'COINFLIP',
-                    title: 'Coinflip',
-                    path: 'commands.coinflip',
-                    fields: [
-                        { p: 'enabled', type: 'toggle' },
-                        { p: 'amount', l: 'Bet Amount' },
-                        { p: 'side', l: 'Side (h/t)' },
-                        { p: 'cooldown', type: 'range', l: 'Delay Range (s)' }
-                    ]
-                },
-                // --- SLOTS ---
-                {
-                    id: 'SLOTS',
-                    title: 'Slots',
-                    path: 'commands.slots',
-                    fields: [
-                        { p: 'enabled', type: 'toggle' },
-                        { p: 'amount', l: 'Bet Amount' },
-                        { p: 'cooldown', type: 'range', l: 'Delay Range (s)' }
-                    ]
-                },
-                // --- QUEST ---
-                {
-                    id: 'QUEST',
-                    title: 'Quest Module',
-                    path: 'commands.quest',
-                    fields: [
-                        { p: 'enabled', l: 'Module Enabled', type: 'toggle' },
-                        { p: 'auto_checklist', l: 'Auto Checklist', type: 'toggle' },
-                        { p: 'interval_h', l: 'Check Interval (hours)' }
-                    ]
-                },
-
-                // --- HUNTBOT MAIN ---
-                {
-                    id: 'HUNTBOT',
-                    title: 'HuntBot Config',
-                    path: 'commands.huntbot',
-                    fields: [
-                        { p: 'enabled', l: 'Module Enabled', type: 'toggle' },
-                        { p: 'cash_to_spend', l: 'Cash Limit' }
-                    ]
-                },
-
-                // --- AUTO USE ---
-                {
-                    id: 'AUTOUSE',
-                    title: 'Auto Use',
-                    path: 'auto_use',
-                    fields: [
-                        { p: 'autoCrate', l: 'Auto Open Crates', type: 'toggle' },
-                        { p: 'autoLootbox', l: 'Auto Open Lootbox', type: 'toggle' }
-                    ]
-                },
-                // --- AUTO OPEN ---
-                {
-                    id: 'AUTOOPEN',
-                    title: 'Auto Open Settings',
-                    path: 'auto_use.open',
-                    fields: [
-                        { p: 'crate', l: 'Crate Amount' },
-                        { p: 'lootbox', l: 'Lootbox Amount' }
-                    ]
-                },
-                // --- AUTOSELL ---
-                {
-                    id: 'AUTOSELL',
-                    title: 'Auto Sell',
-                    path: 'auto_use.autosell',
-                    fields: [
-                        { p: 'enabled', l: 'Enabled', type: 'toggle' },
-                        { p: 'threshold', l: 'Low Cash Threshold' },
-                        { p: 'type', l: 'Item Types (e.g. all)' }
-                    ]
-                },
-
-                // --- GEMS MAIN ---
-                {
-                    id: 'GEMS',
-                    title: 'Auto Gem',
-                    path: 'auto_use.gems',
-                    fields: [
-                        { p: 'enabled', l: 'Module Enabled', type: 'toggle' },
-                        { p: 'order.lowestToHighest', l: 'Use Lowest Tier First', type: 'toggle' }
-                    ]
-                },
-                // --- GEM TYPES ---
-                {
-                    id: 'GEM_TYPES',
-                    title: 'Gem Priority',
-                    path: 'auto_use.gems.gemsToUse',
-                    fields: [
-                        { p: 'empoweredGem', l: 'Use Empowered', type: 'toggle' },
-                        { p: 'luckyGem', l: 'Use Lucky', type: 'toggle' },
-                        { p: 'huntGem', l: 'Use Hunt', type: 'toggle' },
-                        { p: 'specialGem', l: 'Use Special', type: 'toggle' }
-                    ]
-                },
-                // --- GEM TIERS ---
-                {
-                    id: 'GEM_TIERS',
-                    title: 'Gem Tiers Selection',
-                    path: 'auto_use.gems.tiers',
-                    fields: [
-                        { p: 'common', l: 'Common', type: 'toggle' },
-                        { p: 'uncommon', l: 'Uncommon', type: 'toggle' },
-                        { p: 'rare', l: 'Rare', type: 'toggle' },
-                        { p: 'epic', l: 'Epic', type: 'toggle' },
-                        { p: 'legendary', l: 'Legendary', type: 'toggle' },
-                        { p: 'mythical', l: 'Mythical', type: 'toggle' },
-                        { p: 'fabled', l: 'Fabled', type: 'toggle' }
-                    ]
-                },
-
-                // --- LEVEL GRIND ---
-                {
-                    id: 'LEVELGRIND',
-                    title: 'Level Grind (Spam)',
-                    path: 'automation.level_grind',
-                    fields: [
-                        { p: 'enabled', l: 'Module Enabled', type: 'toggle' },
-                        { p: 'use_quotes', l: 'Use Quotes API', type: 'toggle' },
-                        { p: 'cooldown', l: 'Delay Range (s)', type: 'range' },
-                        { p: 'min_length', l: 'Min Length' },
-                        { p: 'max_length', l: 'Max Length' }
-                    ]
-                },
-                // --- RPP AUTOMATION ---
-                {
-                    id: 'RPP',
-                    title: 'RPP Automation',
-                    path: 'automation.rpp',
-                    fields: [
-                        { p: 'enabled', l: 'Module Enabled', type: 'toggle' },
-                        { p: 'interval_s', l: 'Interval (s)' },
-                        { p: 'commands', l: 'Commands List', type: 'array' }
-                    ]
-                },
-
-                // --- UTILITIES ---
-                {
-                    id: 'SWITCHER',
-                    title: 'Channel Switcher',
-                    path: 'utilities.channel_switcher',
-                    fields: [
-                        { p: 'enabled', l: 'Multi-Channel Mode', type: 'toggle' },
-                        { p: 'interval', l: 'Switch Interval (s)', type: 'range' },
-                        { p: 'channels', l: 'Channels', type: 'array' }
-                    ]
-                },
-                {
-                    id: 'POPUPS',
-                    title: 'Desktop Popups',
-                    path: 'utilities.popups',
-                    fields: [
-                        { p: 'enabled', l: 'Popups Enabled', type: 'toggle' },
-                        { p: 'on_captcha', l: 'On Captcha', type: 'toggle' },
-                        { p: 'on_ban', l: 'On Ban', type: 'toggle' }
-                    ]
-                },
-
-                // --- SECURITY ---
-                {
-                    id: 'SECURITY',
-                    title: 'Security Engine',
-                    path: 'security',
-                    fields: [
-                        { p: 'enabled', l: 'Security Enabled', type: 'toggle' },
-                        { p: 'notifications.enabled', l: 'Enable Notifications', type: 'toggle' },
-                        { p: 'webhook_url', l: 'Webhook URL', type: 'password' }
-                    ]
-                },
-                // --- STEALTH ---
-                {
-                    id: 'STEALTH',
-                    title: 'Stealth & Typing',
-                    path: 'stealth.typing',
-                    fields: [
-                        { p: 'enabled', l: 'Simulate Typing', type: 'toggle' },
-                        { p: 'min', l: 'Min Typing (s)' },
-                        { p: 'max', l: 'Max Typing (s)' },
-                        { p: 'reaction_min', l: 'Min Reaction (s)' },
-                        { p: 'reaction_max', l: 'Max Reaction (s)' },
-                        { p: 'typos', l: 'Simulate Typos', type: 'toggle' },
-                        { p: 'mistake_rate', l: 'Typo Rate' },
-                        { p: 'extra_delay', l: 'Extra Delay (s)' }
-                    ]
+            Object.keys(cfg).forEach(key => {
+                if (key === 'commands') {
+                    Object.keys(cfg[key]).forEach(cmd => {
+                        grid.appendChild(createModuleCard(cmd.toUpperCase(), cfg[key][cmd], `commands.${cmd}`));
+                    });
+                } else if (typeof cfg[key] === 'object' && !Array.isArray(cfg[key])) {
+                    grid.appendChild(createModuleCard(key.toUpperCase(), cfg[key], key));
                 }
-            ];
+            });
+        }
 
-            modules.forEach(mod => {
-                try {
-                    const card = document.createElement('div');
-                    card.className = 'module-card';
+        function createModuleCard(title, data, path) {
+            const card = document.createElement('div');
+            card.className = 'module-card';
+            card.innerHTML = `
+                <div class="module-header" onclick="toggleDropdown(this)">
+                    <span class="module-title">${title}</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="dropdown-content">
+                    ${renderCategory(data, path)}
+                </div>
+            `;
+            return card;
+        }
 
-                    let html = `
-                    <div class="module-header">
-                        <span class="module-title">${mod.title}</span>
-                    </div>
-                    <div class="module-body">`;
+        function renderCategory(obj, path) {
+            let h = '';
+            let keys = Object.keys(obj);
+            const isTiers = path.includes('tiers');
+            const isTypes = path.includes('types');
 
-                    // Check if module exists in config
-                    const moduleData = mod.path ? getDeep(cfg, mod.path.split('.')) : cfg;
+            // Enforce Tier order for gems
+            if (isTiers) {
+                const tierOrder = ['common', 'uncommon', 'rare', 'epic', 'mythical', 'legendary', 'fabled'];
+                keys.sort((a, b) => tierOrder.indexOf(a) - tierOrder.indexOf(b));
+            }
 
-                    // If module doesn't exist in config and isn't core, skip it
-                    if (mod.id !== 'CORE' && moduleData === undefined) {
-                        html += `<div style="color:var(--text-muted); padding:10px; text-align:center;">
-                            <i class="fa-solid fa-triangle-exclamation"></i> Not configured in settings.json
-                        </div>`;
-                    } else {
-                        mod.fields.forEach(f => {
-                            // Handle account type specially
-                            if (f.type === 'account') {
-                                const accountData = getDeep(cfg, mod.path.split('.'))?.[0] || {};
-                                f.fields.forEach(subField => {
-                                    const fullPath = mod.path ? `${mod.path}.0.${subField.p}` : subField.p;
-                                    const val = getDeep(cfg, fullPath.split('.'));
-                                    if (val === undefined) return;
+            if (isTiers || isTypes) h += '<div class="gem-tier-group">';
 
-                                    html += renderField(fullPath, subField, val);
-                                });
-                            } else {
-                                const fullPath = mod.path ? `${mod.path}.${f.p}` : f.p;
-                                const val = getDeep(cfg, fullPath.split('.'));
-                                if (val === undefined) return;
+            keys.forEach(key => {
+                const val = obj[key];
+                const fullPath = `${path}.${key}`;
 
-                                html += renderField(fullPath, f, val);
-                            }
-                        });
+                if ((isTiers || isTypes) && typeof val === 'boolean') {
+                    // Compact Glowing Item
+                    h += `
+                        <div class="gem-tier-item ${key}">
+                            <span class="gem-label">${key}</span>
+                            <div class="module-toggle ${val ? 'on' : 'off'}" onclick="toggleMod('${fullPath}', this, event)">
+                                <i class="fa-solid ${val ? 'fa-toggle-on' : 'fa-toggle-off'}"></i> ${val ? 'ON' : 'OFF'}
+                            </div>
+                        </div>
+                    `;
+                } else if (typeof val === 'boolean') {
+                    h += renderField(fullPath, { l: key, type: 'toggle' }, val);
+                } else if (Array.isArray(val) && val.length === 2 && typeof val[0] === 'number') {
+                    h += renderField(fullPath, { l: key, type: 'range' }, val);
+                } else if (typeof val === 'object' && val !== null && !Array.isArray(val)) {
+                    h += `
+                        <div class="module-header" onclick="toggleDropdown(this)" style="margin-top: 15px; border: none; padding: 10px 0;">
+                            <span class="module-title" style="font-size: 0.85rem;">${key}</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="dropdown-content active">
+                            ${renderCategory(val, fullPath)}
+                        </div>
+                    `;
+                } else {
+                    h += renderField(fullPath, { l: key, type: key.includes('url') ? 'password' : 'text' }, val);
+                }
+            });
+
+            if (isTiers || isTypes) h += '</div>';
+            return h;
+        }
+
+        function renderField(path, f, v) {
+            if (f.type === 'toggle') return `<div class="field-group"><label class="field-label">${f.l}</label><div class="module-toggle ${v ? 'on' : 'off'}" onclick="toggleMod('${path}', this, event)"><i class="fa-solid ${v ? 'fa-toggle-on' : 'fa-toggle-off'}"></i> ${v ? 'ON' : 'OFF'}</div></div>`;
+            if (f.type === 'range') return `<div class="field-row"><div class="field-group"><label class="field-label">Min</label><input type="number" class="field-input" value="${v[0]}" onclick="event.stopPropagation()" onchange="updateArrVal('${path}',0,this.value)"></div><div class="field-group"><label class="field-label">Max</label><input type="number" class="field-input" value="${v[1]}" onclick="event.stopPropagation()" onchange="updateArrVal('${path}',1,this.value)"></div></div>`;
+            return `<div class="field-group"><label class="field-label">${f.l}</label><input type="${f.type === 'password' ? 'password' : 'text'}" class="field-input" value="${v}" onclick="event.stopPropagation()" onchange="updateDeepVal('${path}',this.value)"></div>`;
+        }
+
+        function toggleMod(p, el, ev) {
+            if (ev) ev.stopPropagation();
+            const v = !el.classList.contains('on');
+            setDeep(currentConfig, p.split('.'), v);
+
+            // Update UI locally without re-rendering
+            el.className = `module-toggle ${v ? 'on' : 'off'}`;
+            el.innerHTML = `<i class="fa-solid ${v ? 'fa-toggle-on' : 'fa-toggle-off'}"></i> ${v ? 'ON' : 'OFF'}`;
+        }
+        function updateDeepVal(p, v) { setDeep(currentConfig, p.split('.'), !isNaN(v) && v !== "" ? Number(v) : v); }
+        function updateArrVal(p, i, v) { const a = getDeep(currentConfig, p.split('.')); if (a) a[i] = Number(v); }
+
+        function saveAllConfigs() {
+            fetch('/api/settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(currentConfig) }).then(() => alert("Settings Saved!"));
+        }
+
+        // --- UTILS ---
+        function setDeep(o, p, v) { if (p.length === 1) o[p[0]] = v; else { if (!o[p[0]]) o[p[0]] = {}; setDeep(o[p[0]], p.slice(1), v); } }
+        function getDeep(o, p) { if (!o || p.length === 0) return o; return getDeep(o[p[0]], p.slice(1)); }
+
+        // --- DASHBOARD CHARTS ---
+        function initDashCharts() {
+            try {
+                const c1 = document.getElementById('distChart').getContext('2d');
+                distChart = new Chart(c1, {
+                    type: 'pie',
+                    data: { labels: ['Hunt', 'Battle', 'Others'], datasets: [{ data: [1, 1, 1], backgroundColor: ['#ff1f1f', '#3b82f6', '#888'], borderWidth: 0 }] },
+                    options: { plugins: { legend: { position: 'right' } } }
+                });
+                const c2 = document.getElementById('lineChart').getContext('2d');
+                lineChart = new Chart(c2, {
+                    type: 'line',
+                    data: { labels: Array(30).fill(''), datasets: [{ data: Array(30).fill(0), borderColor: '#ff1f1f', backgroundColor: 'rgba(255,31,31,0.05)', fill: true, pointRadius: 2, pointHoverRadius: 5, tension: 0.3 }] },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { x: { display: false }, y: { min: 0, suggestedMax: 10, grid: { color: '#222' }, ticks: { color: '#555', font: { size: 10 } } } },
+                        plugins: { legend: { display: false } }
                     }
+                });
+            } catch (e) { console.warn("Dashboard charts blocked"); }
+        }
 
-                    html += `</div>`;
-                    card.innerHTML = html;
-                    grid.appendChild(card);
-                } catch (e) {
-                    console.error("Card Error:", mod.title, e);
+        // --- STATS LOOP ---
+        function update() {
+            fetch('/api/stats').then(r => r.json()).then(d => {
+                if (d.cash) document.getElementById('cash').innerText = d.cash.toLocaleString();
+                if (d.uptime) document.getElementById('uptimeDisplay').innerText = d.uptime;
+                if (d.logs) renderLogs(d.logs);
+                const dot = document.getElementById('statusDot'), lbl = document.getElementById('botStatus');
+                lbl.innerText = d.status; dot.className = "ping-dot " + (d.status === "PAUSED" ? "paused" : "");
+                if (d.status === "PAUSED" && d.security) {
+                    document.getElementById('securityAlert').style.display = 'flex';
+                    const msgEl = document.getElementById('captchaMsg');
+                    if (msgEl) msgEl.innerText = d.security.last_message || "No details available";
+                } else {
+                    document.getElementById('securityAlert').style.display = 'none';
+                }
+
+                // Update Stats
+                if (d.chart_data) {
+                    document.getElementById('huntsToday').innerText = d.chart_data.hunt;
+                    document.getElementById('battlesToday').innerText = d.chart_data.battle;
+                    document.getElementById('cpm').innerText = d.chart_data.perf_bpm;
+                    if (document.getElementById('totalOwO')) document.getElementById('totalOwO').innerText = d.chart_data.total;
+                }
+
+                // Update Dashboard Charts
+                if (distChart && d.chart_data) {
+                    distChart.data.datasets[0].data = [d.chart_data.hunt, d.chart_data.battle, d.chart_data.other];
+                    distChart.update();
+                }
+
+                if (lineChart && d.chart_data) {
+                    lineChart.data.datasets[0].data.push(d.chart_data.perf_bpm);
+                    lineChart.data.datasets[0].data.shift();
+                    lineChart.update('none');
                 }
             });
         }
+        setInterval(update, 2000);
 
-        // --- MAPPING HELPERS ---
-        window.toggleMod = (path, el) => {
-            const val = !el.classList.contains('on');
-            el.className = `module-toggle ${val ? 'on' : 'off'}`;
-            el.innerHTML = `<i class="fa-solid ${val ? 'fa-toggle-on' : 'fa-toggle-off'}"></i> ${val ? 'ENABLED' : 'DISABLED'}`;
-            setDeep(currentConfig, path.split('.'), val);
-        };
-
-        window.updateDeepVal = (path, val) => {
-            setDeep(currentConfig, path.split('.'), (!isNaN(val) && val !== "") ? Number(val) : val);
-        };
-
-        window.updateArrVal = (path, idx, val) => {
-            const arr = getDeep(currentConfig, path.split('.'));
-            if (arr) arr[idx] = Number(val);
-        };
-
-        window.updateDeepArr = (path, idx, val) => {
-            const arr = getDeep(currentConfig, path.split('.'));
-            if (arr) arr[idx] = val;
-        };
-
-        async function pushArr(path) {
-            let arr = getDeep(currentConfig, path.split('.'));
-            if (!Array.isArray(arr)) arr = [];
-
-            // User Rule: Restrict Channel Switcher to 3 channels max
-            if (path === 'utilities.channel_switcher.channels' && arr.length >= 3) {
-                alert("LIMIT REACHED: You cannot add more than 3 channels to the switcher.");
-                return;
-            }
-
-            // Defaults based on path
-            let val = '';
-            if (path.includes('channels')) val = '000000000000000000';
-            else if (path.includes('commands')) val = 'command_name';
-
-            arr.push(val);
-            setDeep(currentConfig, path.split('.'), arr);
-
-            // Re-render
-            loadConfig();
+        function renderLogs(logs) {
+            const t = document.getElementById('term'); if (!t) return;
+            t.innerHTML = logs.slice(-100).reverse().map(l => {
+                const tagClass = l.type ? `tag-${l.type.toLowerCase()}` : '';
+                return `<div class="history-item ${l.type ? l.type.toLowerCase() : ''}"><span class="history-time">[${l.time}]</span> <span class="history-tag ${tagClass}">${l.type}</span> <span class="history-msg">${l.message}</span></div>`;
+            }).join('');
         }
 
-        window.popArr = (path, idx) => {
-            const arr = getDeep(currentConfig, path.split('.'));
-            if (arr) {
-                arr.splice(idx, 1);
-                renderSettings(currentConfig);
-            }
-        };
 
-        // --- CORE UTILS ---
-        function setDeep(obj, pathArr, val) {
-            if (!obj) return;
-            if (pathArr.length === 1) { obj[pathArr[0]] = val; return; }
-            if (!obj[pathArr[0]]) obj[pathArr[0]] = {};
-            setDeep(obj[pathArr[0]], pathArr.slice(1), val);
-        }
+        // --- DROPDOWN TOGGLE ---
+        function toggleDropdown(element) {
+            const parentCard = element.closest('.module-card');
+            const dropdown = parentCard.querySelector('.dropdown-content');
+            const icon = element.querySelector('i');
 
-        function getDeep(obj, pathArr) {
-            if (!obj || pathArr.length === 0) return obj;
-            if (pathArr.length === 1) return obj[pathArr[0]];
-            const next = obj[pathArr[0]];
-            if (next === undefined || next === null) return undefined;
-            return getDeep(next, pathArr.slice(1));
-        }
+            dropdown.classList.toggle('active');
+            element.classList.toggle('active');
 
-        function loadConfig() {
-            fetch('/api/settings').then(r => r.json()).then(c => {
-                currentConfig = c;
-                renderSettings(c);
-            });
-        }
-
-        window.saveConfig = () => {
-            fetch('/api/settings', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(currentConfig)
-            }).then(() => alert('CONFIGURATION SAVED!')).catch(err => {
-                alert('Error saving config: ' + err.message);
-            });
-        };
-
-        let rawHistory = [];
-
-        async function loadHistory() {
-            try {
-                const feed = document.getElementById('history-feed');
-                feed.innerHTML = '<div style="padding:20px; color:#555;">[SYSTEM] Fetching session logs...</div>';
-
-                const res = await fetch('/api/history');
-                rawHistory = await res.json();
-                filterHistory('all');
-            } catch (e) {
-                console.error("History error", e);
+            if (dropdown.classList.contains('active')) {
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
             }
         }
 
-        function filterHistory(type) {
-            const feed = document.getElementById('history-feed');
-            const data = type === 'all' ? rawHistory : rawHistory.filter(r => r.type === type);
-
-            feed.innerHTML = data.map(row => {
-                const badge = row.type === 'CMD' ? 'tag-cmd' : (row.type === 'SECURITY' ? 'tag-security' : 'tag-sys');
-                return `
-                    <div class="history-item ${row.type.toLowerCase()}">
-                        <span class="history-time">[${row.time}]</span>
-                        <span class="history-tag ${badge}">${row.type}</span>
-                        <span class="history-msg">${row.message}</span>
-                    </div>
-                `;
-            }).join('') || '<div style="padding:20px; color:#333;">No matching logs found.</div>';
-        }
-
-        // --- ANALYTICS CHARTS ---
-        let cashChart = null;
-        let sessChart = null;
-        let globalAnalyticsData = null; // Store for filtering
-
-        async function loadAnalytics() {
-            loadHistory();
-            try {
-                const res = await fetch('/api/history/analytics');
-                globalAnalyticsData = await res.json();
-
-                // Update Totals (Counters)
-                const totals = globalAnalyticsData.totals || {};
-                document.getElementById('total-sessions').innerText = totals.total_sessions || 0;
-                document.getElementById('total-hunts').innerText = (totals.all_time_hunts || 0).toLocaleString();
-                document.getElementById('total-battles').innerText = (totals.all_time_battles || 0).toLocaleString();
-                document.getElementById('total-cmds').innerText = (totals.all_time_commands || 0).toLocaleString();
-
-                // Populate Dropdown
-                populateSessionDropdown();
-
-                // Render Charts
-                renderCashChart();
-                renderSessionChart();
-            } catch (e) {
-                console.error("Analytics Error:", e);
-            }
-        }
 
         function populateSessionDropdown() {
             const select = document.getElementById('session-select');
             const currentVal = select.value;
-
-            // Keep "All" option, clear others
             select.innerHTML = '<option value="all">ALL SESSIONS</option>';
-
             if (!globalAnalyticsData || !globalAnalyticsData.sessions) return;
-
-            // Sort sessions new to old
-            const sortedSessions = [...globalAnalyticsData.sessions].reverse();
-
-            sortedSessions.forEach(s => {
-                // Fix: s.id is integer, use s.date/s.start_time
-                const dateStr = `${s.date} ${s.start_time}`;
+            [...globalAnalyticsData.sessions].reverse().forEach(s => {
                 const opt = document.createElement('option');
                 opt.value = s.id;
-                opt.innerText = `Session #${s.id}: ${dateStr}`;
+                opt.innerText = `Session #${s.id}: ${s.date} ${s.start_time}`;
                 select.appendChild(opt);
             });
-
-            // Restore selection if valid
-            if (currentVal && Array.from(select.options).some(o => o.value === currentVal)) {
-                select.value = currentVal;
-            }
+            if (currentVal) select.value = currentVal;
         }
 
         function renderSessionChart() {
-            const select = document.getElementById('session-select');
-            const filterId = select.value;
-
+            const filterId = document.getElementById('session-select').value;
             if (!globalAnalyticsData) return;
-
-            let filteredSessions = [];
-            if (filterId === 'all') {
-                // Show last 20 sessions max to prevent overcrowding
-                filteredSessions = globalAnalyticsData.sessions.slice(-20);
-            } else {
-                // Find specific session
-                const s = globalAnalyticsData.sessions.find(x => String(x.id) === filterId);
-                if (s) filteredSessions = [s];
-            }
-
+            let filtered = filterId === 'all' ? globalAnalyticsData.sessions.slice(-20) : [globalAnalyticsData.sessions.find(x => String(x.id) === filterId)];
             const sctx = document.getElementById('sessionChart').getContext('2d');
             if (sessChart) sessChart.destroy();
-
-            // Prepare Data
-            const labels = filteredSessions.map(s => `S${s.id}`);
-            const sHunts = filteredSessions.map(s => s.stats.hunts);
-            const sBattles = filteredSessions.map(s => s.stats.battles);
-
-            // Chart Config - Removed Scroll Wrapper Logic
             sessChart = new Chart(sctx, {
                 type: 'bar',
                 data: {
-                    labels: labels,
+                    labels: filtered.map(s => `S${s.id}`),
                     datasets: [
-                        { label: 'Hunts', data: sHunts, backgroundColor: '#ff1f1f' },
-                        { label: 'Battles', data: sBattles, backgroundColor: '#3b82f6' }
+                        { label: 'Hunts', data: filtered.map(s => s.stats.hunts), backgroundColor: '#ff1f1f' },
+                        { label: 'Battles', data: filtered.map(s => s.stats.battles), backgroundColor: '#3b82f6' }
                     ]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: { grid: { display: false }, ticks: { color: '#666' } },
-                        y: { grid: { color: '#222' }, ticks: { color: '#666' } }
-                    },
-                    plugins: { legend: { labels: { color: '#888' } } }
-                }
+                options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false }, ticks: { color: '#666' } }, y: { grid: { color: '#222' }, ticks: { color: '#666' } } } }
             });
         }
 
@@ -1294,288 +589,60 @@ Sorry for this bad inline code bcz sometimes i don't want  to move my hands from
             if (!globalAnalyticsData) return;
             const cctx = document.getElementById('cashHistoryChart').getContext('2d');
             if (cashChart) cashChart.destroy();
-
-            const cashLabels = globalAnalyticsData.cash_history.map(c => {
-                const d = new Date(c.timestamp);
-                return `${d.getMonth() + 1}/${d.getDate()} ${d.getHours()}:${d.getMinutes()}`;
-            });
-            const cashVals = globalAnalyticsData.cash_history.map(c => c.amount);
-
             cashChart = new Chart(cctx, {
                 type: 'line',
                 data: {
-                    labels: cashLabels,
-                    datasets: [{
-                        label: 'Cash Balance',
-                        data: cashVals,
-                        borderColor: '#ffd700',
-                        backgroundColor: 'rgba(255, 215, 0, 0.1)',
-                        borderWidth: 2,
-                        tension: 0.3,
-                        fill: true,
-                        pointRadius: 2
-                    }]
+                    labels: globalAnalyticsData.cash_history.map(c => c.timestamp.split(' ')[1]),
+                    datasets: [{ label: 'Cash', data: globalAnalyticsData.cash_history.map(c => c.amount), borderColor: '#ffd700', backgroundColor: 'rgba(255, 215, 0, 0.1)', fill: true, tension: 0.3 }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { display: false },
-                        y: { grid: { color: '#222' }, ticks: { color: '#666' } }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { color: '#222' }, ticks: { color: '#666' } } } }
             });
         }
 
-        // Navigation enhancer (analytics + captcha handling)
+        let currentFilter = 'all';
+        function filterHistory(type, el) {
+            currentFilter = type;
+            document.querySelectorAll('.badge').forEach(b => b.classList.remove('active'));
+            if (el) el.classList.add('active');
+            renderHistoryFeed();
+        }
 
-        // --- ENHANCED CAPTCHA SOLVER FUNCTIONS ---
-        let captchaCheckInterval = null;
-
-        function refreshCaptcha() {
-            fetch('/api/captcha/current')
-                .then(response => response.json())
-                .then(data => {
-                    const display = document.getElementById('captchaDisplay');
-                    const codeInput = document.getElementById('captchaCode');
-                    const captchaCommand = document.getElementById('captchaCommand');
-
-                    if (data.success && data.url) {
-                        // Show captcha image
-                        (function () {
-                            const img = new Image();
-                            img.style.maxWidth = '100%';
-                            img.style.maxHeight = '400px';
-                            img.style.borderRadius = '12px';
-                            img.style.border = '3px solid var(--primary)';
-                            img.style.boxShadow = '0 0 20px rgba(0,0,0,0.5)';
-                            img.onload = function () {
-                                display.innerHTML = `
-                                    <div style="text-align: center;">
-                                        <div class="captcha-img-container">
-                                            ${img.outerHTML}
-                                        </div>
-                                        <div style="margin-top: 15px; color: var(--text-muted); font-size: 1em; font-weight: bold;">
-                                            <i class="fa-solid fa-clock"></i> ${data.age_seconds}s ago | 
-                                            <i class="fa-solid fa-coins"></i> ${data.cash} cowoncy
-                                        </div>
-                                    </div>`;
-                            };
-                            img.onerror = function () {
-                                display.innerHTML = `
-                                    <div style="color: var(--text-muted); text-align:center;">
-                                        <i class="fa-solid fa-image-slash fa-2x" style="margin-bottom: 15px;"></i>
-                                        <p>Failed to load image</p>
-                                    </div>`;
-                            };
-                            img.src = data.url;
-                        })();
-
-                        // Update command hint
-                        if (captchaCommand) captchaCommand.textContent = data.command;
-
-                        // Focus input
-                        codeInput.focus();
-
-                        // Show success indicator
-                        showCaptchaStatus('active', `Active captcha detected (${data.cash} cowoncy)`);
-                    } else {
-                        // Handle persistent button clear
-                        if (pendingCaptchaRequest) {
-                            const btn = document.querySelector('.btn-captcha-submit');
-                            if (btn) {
-                                btn.innerHTML = 'SUBMIT SOLUTION';
-                                btn.disabled = false;
-                            }
-                            pendingCaptchaRequest = false;
-                        }
-
-                        // No active captcha
-                        display.innerHTML = `
-                            <div style="color: var(--text-muted); text-align: center;">
-                                <i class="fa-solid fa-hourglass-half fa-2x" style="margin-bottom: 15px;"></i>
-                                <p style="margin: 0; font-weight: bold;">Waiting for captcha...</p>
-                                <p style="font-size: 0.9em; margin-top: 10px;">
-                                    When HuntBot triggers a verification, the image will appear here automatically.
-                                </p>
-                            </div>`;
-
-                        if (captchaCommand) captchaCommand.textContent = "No active captcha";
-                        codeInput.value = "";
-
-                        showCaptchaStatus('inactive', 'No active captcha');
-                    }
+        function renderHistoryFeed() {
+            const feed = document.getElementById('history-feed');
+            if (!feed || !globalAnalyticsData || !globalAnalyticsData.recent_logs) return;
+            feed.innerHTML = globalAnalyticsData.recent_logs
+                .filter(l => {
+                    if (currentFilter === 'all') return true;
+                    if (currentFilter === 'SECURITY') return l.type === 'SECURITY' || l.type === 'ALARM';
+                    return l.type === currentFilter;
                 })
-                .catch(error => {
-                    console.error('Captcha fetch error:', error);
-                    showCaptchaStatus('error', 'Failed to fetch captcha status');
-                });
+                .slice(-100).reverse().map(l => {
+                    const tagClass = l.type ? `tag-${l.type.toLowerCase()}` : '';
+                    return `<div class="history-item ${l.type ? l.type.toLowerCase() : ''}"><span class="history-time">[${l.time}]</span> <span class="history-tag ${tagClass}">${l.type}</span> <span class="history-msg">${l.message}</span></div>`;
+                }).join('');
         }
 
-        function showCaptchaStatus(status, message) {
-            const resultDiv = document.getElementById('captchaResult');
-            resultDiv.style.display = 'block';
-
-            switch (status) {
-                case 'active':
-                    resultDiv.style.background = 'rgba(0,255,136,0.2)';
-                    resultDiv.style.border = '1px solid var(--success)';
-                    resultDiv.innerHTML = `<i class="fa-solid fa-check-circle"></i> ${message}`;
-                    break;
-                case 'inactive':
-                    resultDiv.style.background = 'rgba(255,193,7,0.2)';
-                    resultDiv.style.border = '1px solid var(--warning)';
-                    resultDiv.innerHTML = `<i class="fa-solid fa-info-circle"></i> ${message}`;
-                    break;
-                case 'error':
-                    resultDiv.style.background = 'rgba(255,31,31,0.2)';
-                    resultDiv.style.border = '1px solid var(--primary)';
-                    resultDiv.innerHTML = `<i class="fa-solid fa-exclamation-circle"></i> ${message}`;
-                    break;
-                case 'success':
-                    resultDiv.style.background = 'rgba(0,255,136,0.2)';
-                    resultDiv.style.border = '1px solid var(--success)';
-                    resultDiv.innerHTML = `<i class="fa-solid fa-check-circle"></i> ${message}`;
-                    break;
-            }
-
-            if (status !== 'active') {
-                setTimeout(() => resultDiv.style.display = 'none', 3000);
-            }
+        async function loadHistory() {
+            try {
+                const res = await fetch('/api/history/analytics');
+                globalAnalyticsData = await res.json();
+                const totals = globalAnalyticsData.totals || {};
+                document.getElementById('total-sessions').innerText = totals.total_sessions || 0;
+                document.getElementById('total-hunts').innerText = (totals.all_time_hunts || 0).toLocaleString();
+                document.getElementById('total-battles').innerText = (totals.all_time_battles || 0).toLocaleString();
+                document.getElementById('total-cmds').innerText = (totals.all_time_commands || 0).toLocaleString();
+                populateSessionDropdown();
+                renderCashChart();
+                renderSessionChart();
+                renderHistoryFeed();
+            } catch (e) { console.error("History Error:", e); }
         }
 
-        function submitCaptcha() {
-            const code = document.getElementById('captchaCode').value.trim();
-            const btn = document.querySelector('.btn-captcha-submit');
-            if (!code) {
-                alert('Please enter the captcha code from the image');
-                return;
-            }
+        function resumeBot() { fetch('/api/security', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'resume' }) }).then(() => { document.getElementById('securityAlert').style.display = 'none'; update(); }); }
+        function action(a, el) { fetch('/api/control', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: a }) }).then(() => update()); }
 
-            if (btn) {
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SUBMITTING...';
-                btn.disabled = true;
-                pendingCaptchaRequest = true;
-            }
-
-            showCaptchaStatus('active', 'Submitting solution...');
-
-            fetch('/api/captcha/submit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code: code })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showCaptchaStatus('success', data.message);
-                        document.getElementById('captchaCode').value = '';
-
-                        // Update stats
-                        updateCaptchaStats();
-
-                        // Refresh display after a delay
-                        setTimeout(refreshCaptcha, 2000);
-
-                        // Log success to terminal
-                        logToTerminal(`[CAPTCHA] Solution submitted: ${code}`, 'success');
-                    } else {
-                        showCaptchaStatus('error', data.error || 'Failed to submit');
-                        logToTerminal(`[CAPTCHA] Error: ${data.error}`, 'error');
-                    }
-                })
-                .catch(error => {
-                    showCaptchaStatus('error', 'Network error');
-                    console.error('Submit error:', error);
-                })
-                .finally(() => {
-                    if (btn) {
-                        setTimeout(() => {
-                            btn.innerHTML = 'SUBMIT SOLUTION';
-                            btn.disabled = false;
-                        }, 2000); // Prioritized sending is fast
-                    }
-                });
-        }
-
-        function updateCaptchaStats() {
-            fetch('/api/captcha/stats')
-                .then(response => response.json())
-                .then(data => {
-                    if (document.getElementById('captchaSolved')) {
-                        document.getElementById('captchaSolved').innerText = data.solved;
-                        document.getElementById('captchaSuccess').innerText = data.success_rate + '%';
-                    }
-                });
-        }
-
-        function logToTerminal(message, type = 'info') {
-            const term = document.getElementById('term');
-            if (term) {
-                const time = new Date().toLocaleTimeString();
-                const color = type === 'success' ? '#00ff88' :
-                    type === 'error' ? '#ff1f1f' : '#ffffff';
-
-                const logEntry = `<div class="history-item">
-                    <span class="history-time">[${time}]</span>
-                    <span class="history-tag tag-sys">DASH</span>
-                    <span class="history-msg" style="color:${color}">${message}</span>
-                </div>`;
-
-                term.innerHTML = logEntry + term.innerHTML;
-            }
-        }
-
-        // Start auto-refresh when captcha tab is active
-        function startCaptchaAutoRefresh() {
-            if (captchaCheckInterval) {
-                clearInterval(captchaCheckInterval);
-            }
-
-            captchaCheckInterval = setInterval(() => {
-                refreshCaptcha();
-                updateCaptchaStats();
-            }, 3000); // Check every 3 seconds
-
-            // Initial refresh
-            refreshCaptcha();
-            updateCaptchaStats();
-        }
-
-        // Stop auto-refresh when leaving captcha tab
-        function stopCaptchaAutoRefresh() {
-            if (captchaCheckInterval) {
-                clearInterval(captchaCheckInterval);
-                captchaCheckInterval = null;
-            }
-        }
-
-        // Modify the navigation function to handle captcha tab
-        const originalNav = window.nav;
-        window.nav = function (id, el) {
-            originalNav(id, el);
-
-            if (id === 'captcha') {
-                startCaptchaAutoRefresh();
-            } else {
-                stopCaptchaAutoRefresh();
-            }
-
-            if (id === 'history') {
-                loadAnalytics();
-            }
-        };
-
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', function () {
-            // If captcha tab is active by default
-            if (document.getElementById('captcha').classList.contains('active-view')) {
-                startCaptchaAutoRefresh();
-            }
-        });
+        document.addEventListener('DOMContentLoaded', () => { initDashCharts(); update(); loadConfig(); });
     </script>
 </body>
 
 </html>
-```

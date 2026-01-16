@@ -1,6 +1,6 @@
 # This file is part of NeuraSelf-UwU.
 # Copyright (c) 2025-Present Routo
-
+#
 # NeuraSelf-UwU is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -42,7 +42,9 @@ stats = {
     'captchas_solved_today': 0,
     'captcha_success_count': 0,
     'pending_commands': [],
-    'last_cooldown': {}
+    'last_cooldown': {},
+    'total_cmd_count': 0,
+    'other_count': 0
 }
 
 command_logs = deque(maxlen=500)
@@ -70,17 +72,35 @@ def log_command(type, message, status="info"):
     if len(full_session_history) >= 500:
         full_session_history.pop(0)
     full_session_history.append(entry)
-    if type == "CMD" and ("Sent: owo " in message or "Sent: " in message):
+    if type == "CMD":
+        cmd = "other"
         parts = message.split("Sent: ")
         if len(parts) > 1:
-            cmd_text = parts[1].split(" ")[0].lower()
-            if "owo " in cmd_text: cmd_text = cmd_text.replace("owo ", "")
-            cmd = "other"
-            if cmd_text in ["hunt", "h"]: cmd = "hunt"
-            elif cmd_text in ["battle", "b"]: cmd = "battle"
-            elif cmd_text in ["autohunt"]: cmd = "captcha"
-            history = ht.load_history()
-            ht.track_command(history, cmd)
+            full_text = parts[1].lower().strip()
+            if full_text.startswith("owo "):
+                cmd_parts = full_text.split()
+                cmd_text = cmd_parts[1] if len(cmd_parts) > 1 else "owo"
+            else:
+                cmd_text = full_text.split()[0]
+            
+            if cmd_text in ["hunt", "h"]: 
+                cmd = "hunt"
+                stats['hunt_count'] += 1
+            elif cmd_text in ["battle", "b"]: 
+                cmd = "battle"
+                stats['battle_count'] += 1
+            elif "autohunt" in cmd_text: 
+                cmd = "captcha"
+            elif cmd_text == "owo":
+                cmd = "other"
+                stats['other_count'] += 1
+            else:
+                stats['other_count'] += 1
+            
+            stats['total_cmd_count'] += 1
+
+        history = ht.load_history()
+        ht.track_command(history, cmd)
 
 def record_snapshot():
     now = time.time()

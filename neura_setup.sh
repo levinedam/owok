@@ -63,4 +63,4 @@ python3.10 config_helper.py
 echo ""
 echo "Setup complete! Starting Neura-Self..."
 echo ""
-python3.10 main.py
+python3.10 neura.py

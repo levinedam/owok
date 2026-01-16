@@ -1,6 +1,6 @@
 # This file is part of NeuraSelf-UwU.
 # Copyright (c) 2025-Present Routo
-
+#
 # NeuraSelf-UwU is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -31,7 +31,7 @@ def home():
 def stats():
     uptime_start = state.stats['uptime_start']
     elapsed = time.time() - uptime_start
-    total_cmds = len(state.full_session_history)
+    total_cmds = state.stats.get('total_cmd_count', 0)
     mins = elapsed / 60
     cpm = round(total_cmds / mins, 1) if mins > 0.1 else 0
     
@@ -73,6 +73,7 @@ def stats():
         'chart_data': {
             'hunt': state.stats.get('hunt_count', 0),
             'battle': state.stats.get('battle_count', 0),
+            'other': state.stats.get('other_count', 0),
             'total': total_cmds,
             'perf_bpm': cpm
         },
@@ -102,6 +103,7 @@ def get_analytics():
     try:
         from utils import history_tracker
         dat = history_tracker.load_history()
+        dat['recent_logs'] = list(state.full_session_history)[-500:]
         return jsonify(dat)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -116,21 +118,11 @@ def settings():
             
             for bot in state.bot_instances:
                 bot.config = new_config
-                bot.prefix = new_config.get('prefix', 'owo ')
-                
-                accounts = new_config.get('accounts', [])
-                if accounts:
-                    primary = accounts[0]
-                    bot.token = primary.get('token', bot.token)
-                    if primary.get('channels'):
-                        bot.channels = primary.get('channels')
-                        bot.channel_id = int(primary.get('channels')[0])
-                else:
-                    if new_config.get('channels'):
-                        bot.channels = new_config.get('channels')
-                        bot.channel_id = int(new_config.get('channels')[0])
+                core_cfg = new_config.get('core', {})
+                bot.prefix = core_cfg.get('prefix', 'owo ')
+                bot._load_config()
 
-            state.log_command("SYS", "Settings updated and synchronized", "success")
+            state.log_command("SYS", "Settings updated successfully", "success")
             return jsonify({"status": "success"})
         except Exception as e:
             return jsonify({"status": "error", "message": str(e)}), 500
@@ -140,6 +132,28 @@ def settings():
                 return jsonify(json.load(f))
         except:
             return jsonify({})
+
+@app.route('/api/accounts', methods=['GET', 'POST'])
+def accounts_api():
+    if request.method == 'POST':
+        new_accounts = request.json
+        try:
+            with open('config/accounts.json', 'w') as f:
+                json.dump(new_accounts, f, indent=4)
+            
+            for bot in state.bot_instances:
+                bot.accounts = new_accounts
+                
+            state.log_command("SYS", "Accounts updated successfully", "success")
+            return jsonify({"status": "success"})
+        except Exception as e:
+            return jsonify({"status": "error", "message": str(e)}), 500
+    else:
+        try:
+            with open('config/accounts.json', 'r') as f:
+                return jsonify(json.load(f))
+        except:
+            return jsonify([])
 
 @app.route('/api/control', methods=['POST'])
 def control():

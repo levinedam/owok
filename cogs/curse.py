@@ -1,6 +1,6 @@
 # This file is part of NeuraSelf-UwU.
 # Copyright (c) 2025-Present Routo
-
+#
 # NeuraSelf-UwU is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -88,12 +88,13 @@ class Curse(commands.Cog):
         await self._process_response(after)
 
     async def _process_response(self, message):
-        monitor_id = str(self.bot.config.get("monitor_bot_id", "408785106942164992"))
+        core_config = self.bot.config.get("core", {})
+        monitor_id = str(core_config.get("monitor_bot_id", "408785106942164992"))
         if str(message.author.id) != monitor_id:
             return
         if message.channel.id != self.bot.channel_id:
             return
-        if not self.bot.is_message_for_me(message):
+        if not self.bot.is_message_for_me(message, role="source", keyword="puts a curse on"):
             return
 
         full_content = self.bot.get_full_content(message)

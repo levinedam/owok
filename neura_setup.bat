@@ -1,5 +1,6 @@
 @echo off
 cd /d "%~dp0"
+
 setlocal enabledelayedexpansion
 
 chcp 65001 >nul
@@ -57,6 +58,6 @@ if !errorlevel! neq 0 (
 
 echo Setup complete! Starting Neura-Self...
 echo.
-py -3.10 main.py
+py -3.10 neura.py
 
 pause

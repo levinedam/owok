@@ -1,6 +1,6 @@
 # This file is part of NeuraSelf-UwU.
 # Copyright (c) 2025-Present Routo
-
+#
 # NeuraSelf-UwU is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -37,8 +37,8 @@ class Control:
                 for bot in state.bot_instances:
                     bot.paused = False
                     bot.throttle_until = 0
-                self.bot.log("SYS", "Bot RESUMED via Chat Command")
-                await self.bot.send_message("Bot resumed.")
+                self.bot.log("SYS", "Bot RESUMED via Chat cmd")
+
 
         elif content == '.status':
             status = "PAUSED " if self.bot.paused else "RUNNING "

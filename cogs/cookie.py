@@ -1,6 +1,6 @@
 # This file is part of NeuraSelf-UwU.
 # Copyright (c) 2025-Present Routo
-
+#
 # NeuraSelf-UwU is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -23,6 +23,7 @@ class Cookie(commands.Cog):
         self.stats_file = 'config/stats_cookie.json'
         self.last_run = self._load_last_run()
         self.cooldown_until = 0
+        self.last_cookie_sent = 0
         self.loop_task = asyncio.create_task(self.run_loop())
 
     def _load_last_run(self):
@@ -73,13 +74,14 @@ class Cookie(commands.Cog):
             cookie_cooldown = 86400
             elapsed = current_time - self.last_run
             if elapsed >= cookie_cooldown:
-                user_to_cookie = cfg.get('userid')
+                user_to_cookie = cfg.get('id')
                 if user_to_cookie:
                     self.bot.log("INFO", f"Sending cookie command to {user_to_cookie}...")
                     cmd = f"cookie {user_to_cookie}"
                     success = await self.bot.send_message(cmd)
                     if success:
                         self.last_run = time.time()
+                        self.last_cookie_sent = time.time()
                         self.cooldown_until = self.last_run + cookie_cooldown
                         self._save_last_run(self.last_run)
                     else:
@@ -96,27 +98,31 @@ class Cookie(commands.Cog):
         await self._process_response(after)
 
     async def _process_response(self, message):
-        monitor_id = str(self.bot.config.get('monitor_bot_id', '408785106942164992'))
+        core_config = self.bot.config.get('core', {})
+        monitor_id = str(core_config.get('monitor_bot_id', '408785106942164992'))
         if str(message.author.id) != monitor_id: return
         if message.channel.id != self.bot.channel_id: return
         
         full_content = self.bot.get_full_content(message)
-        if not self.bot.is_message_for_me(message): return
+        
+        is_sender = self.bot.is_message_for_me(message, role="target", keyword="got a cookie from") or \
+                    self.bot.is_message_for_me(message, role="source", keyword="sent a cookie to")
+        
+        if not is_sender: return
         
         if "wait" in full_content:
-            # look for "🚫" emoji (for difference between cookie and daily cooldown)
-            if "🚫" in message.content:
-
-                self._sync_cooldown(full_content, "cookie")
+            time_since_last = time.time() - self.last_cookie_sent
+            if time_since_last < 20.0 or "cookie" in full_content:
+                self._sync_cooldown(full_content)
+                self.last_cookie_sent = 0
         
-        if "sent a cookie to" in full_content:
+        if "sent a cookie to" in full_content or "got a cookie from" in full_content:
             self.last_run = time.time()
             self._save_last_run(self.last_run)
             self.cooldown_until = self.last_run + 86400  
             self.bot.log("SUCCESS", "Cookie successfully sent.")
 
-    def _sync_cooldown(self, message, command_type):
-      
+    def _sync_cooldown(self, message):
         h_match = re.search(r'(\d+)\s*[hH]', message)
         m_match = re.search(r'(\d+)\s*[mM]', message)
         s_match = re.search(r'(\d+)\s*[sS]', message)
@@ -126,14 +132,12 @@ class Cookie(commands.Cog):
         s = int(s_match.group(1)) if s_match else 0
         total_seconds = (h * 3600) + (m * 60) + s
         
-   
-        if command_type == "cookie":
+        if total_seconds > 0:
             self.bot.log("COOLDOWN", f"Cookie cooldown synced: {h}h {m}m {s}s remaining.")
-            self.cooldown_until = time.time() + total_seconds + 30  
-        
+            self.cooldown_until = time.time() + total_seconds + random.randint(10, 30)
+            self.last_run = time.time() - (86400 - (total_seconds + 30))
+            self._save_last_run(self.last_run)
 
-        self.last_run = time.time() - (86400 - (total_seconds + 30))  
-        self._save_last_run(self.last_run)
 
 async def setup(bot):
     await bot.add_cog(Cookie(bot))

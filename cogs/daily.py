@@ -1,6 +1,6 @@
 # This file is part of NeuraSelf-UwU.
 # Copyright (c) 2025-Present Routo
-
+#
 # NeuraSelf-UwU is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -25,6 +25,7 @@ class Daily(commands.Cog):
         self.stats_file = 'config/stats_daily.json'
         self.last_run = self._load_last_run()
         self.cooldown = 86400
+        self.last_daily_sent = 0
         self.loop_task = asyncio.create_task(self.loop())
 
     def _load_last_run(self):
@@ -68,8 +69,9 @@ class Daily(commands.Cog):
                 self.bot.log("INFO", "Sending daily command...")
                 success = await self.bot.send_message("daily")
                 if success:
+                    self.last_daily_sent = time.time()
                     self.last_run = time.time()
-                    self.cooldown = 86400  # Default
+                    self.cooldown = 86400 
                     self._save_last_run(self.last_run)
                 else:
                     await asyncio.sleep(30)
@@ -92,7 +94,8 @@ class Daily(commands.Cog):
         await self._process_response(after)
 
     async def _process_response(self, message):
-        monitor_id = str(self.bot.config.get('monitor_bot_id', '408785106942164992'))
+        core_config = self.bot.config.get('core', {})
+        monitor_id = str(core_config.get('monitor_bot_id', '408785106942164992'))
         if str(message.author.id) != monitor_id: return
         if message.channel.id != self.bot.channel_id: return
         
@@ -100,7 +103,6 @@ class Daily(commands.Cog):
         if not self.bot.is_message_for_me(message): return
         
         if "wait" in full_content:
-            # More robust H/M/S extraction
             h_match = re.search(r'(\d+)\s*[hH]', full_content)
             m_match = re.search(r'(\d+)\s*[mM]', full_content)
             s_match = re.search(r'(\d+)\s*[sS]', full_content)
@@ -111,18 +113,19 @@ class Daily(commands.Cog):
             total_seconds = (h * 3600) + (m * 60) + s
             
             if total_seconds > 0:
-                # Disambiguation: Must be for daily
-                # Check 1: Explicit keyword in message
-                # Check 2: Last sent command was daily within 6 seconds
-                time_since_last = time.time() - getattr(self.bot, 'last_sent_time', 0)
-                is_for_daily = "daily" in full_content or \
-                               ("daily" in self.bot.last_sent_command.lower() and time_since_last < 6.0)
+                time_since_last = time.time() - self.last_daily_sent
+                is_for_daily = (
+                    "daily" in full_content or 
+                    (time_since_last < 20.0) 
+                )
                 
                 if is_for_daily:
-                    self.cooldown = total_seconds + 30
+                    self.cooldown = total_seconds + random.randint(10, 30)
                     self.last_run = time.time()
                     self._save_last_run(self.last_run)
                     self.bot.log("COOLDOWN", f"Daily wait synced: {h}h {m}m {s}s remaining.")
+
+                    self.last_daily_sent = 0 
 
 async def setup(bot):
     await bot.add_cog(Daily(bot))

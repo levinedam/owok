@@ -1,6 +1,6 @@
 # This file is part of NeuraSelf-UwU.
 # Copyright (c) 2025-Present Routo
-
+#
 # NeuraSelf-UwU is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -102,17 +102,34 @@ class HuntBot(commands.Cog):
                     if em.image:
                         img_url = em.image.url
                         break
-            state.stats['current_captcha'] = {
-                'type': 'huntbot',
-                'time': time.time(),
-                'timestamp': time.time(),
-                'image_url': img_url
-            }
-            self.bot.log("AutoHunt", "HuntBot Captcha! CHECK DASHBOARD & SOLVE.")
-            base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            path = os.path.join(base, "beeps", "huntbot_image_beep.mp3")
-            if os.path.exists(path):
-                asyncio.create_task(self._play_beep_async(path))
+            try:
+                import modules.solver as solver
+                if self.bot.session and img_url:
+                    self.bot.log("AutoHunt", "Attempting to auto-solve captcha...")
+                    answer = await solver.solveHbCaptcha(img_url, self.bot.session)
+                    
+                    if answer and len(answer) > 0:
+                        self.bot.log("SUCCESS", f"Captcha Solved: {answer}")
+                        cfg = self.bot.config.get('commands', {}).get('huntbot', {})
+                        cash = cfg.get('cash_to_spend', 15000)
+                        await self.bot.send_message(f"owo autohunt {cash} {answer}")
+                        
+                        state.stats['captchas_solved_today'] = state.stats.get('captchas_solved_today', 0) + 1
+                        state.stats['captcha_success_count'] = state.stats.get('captcha_success_count', 0) + 1
+                    else:
+                        self.bot.log("WARN", "Could not solve captcha automatically.")
+                        base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                        path = os.path.join(base, "beeps", "huntbot_image_beep.mp3")
+                        plat_settings = self.bot.config.get('platform_settings', {})
+                        if plat_settings.get('desktop_notifications', True):
+                            if os.path.exists(path):
+                                asyncio.create_task(self._play_beep_async(path))
+            except Exception as e:
+                self.bot.log("ERROR", f"Solver failed: {e}")
+                base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                path = os.path.join(base, "beeps", "huntbot_image_beep.mp3")
+                if os.path.exists(path):
+                     asyncio.create_task(self._play_beep_async(path))
 
         elif "wrong password" in content_lower or "incorrect password" in content_lower:
             self.bot.log("AutoHunt", "Wrong password provided. Waiting for reset.")

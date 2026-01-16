@@ -1,0 +1,12 @@
+{
+    "accounts": [
+        {
+            "token": "YOUR_TOKEN",
+            "channels": [
+                "CHANNEL_ID",
+                "CHANNEL_ID2"
+            ],
+            "enabled": true
+        }
+    ]
+}

@@ -1,6 +1,6 @@
 # This file is part of NeuraSelf-UwU.
 # Copyright (c) 2025-Present Routo
-
+#
 # NeuraSelf-UwU is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -17,6 +17,7 @@ import random
 import time
 import re
 import core.state as state
+from utils import history_tracker as ht
 
 class Grinding(commands.Cog):
     def __init__(self, bot):
@@ -42,6 +43,12 @@ class Grinding(commands.Cog):
             if time.time() >= self.cooldowns['hunt']:
                 sent = await self.bot.send_message("hunt")
                 if sent:
+                    try:
+                        history = ht.load_history()
+                        ht.track_command(history, 'hunt')
+                    except Exception as e:
+                        self.bot.log("ERROR", f"History error: {e}")
+
                     delay = random.uniform(cfg.get('cooldown', [15, 18])[0], cfg.get('cooldown', [15, 18])[1])
                     self.cooldowns['hunt'] = time.time() + delay
             await asyncio.sleep(1)
@@ -59,6 +66,12 @@ class Grinding(commands.Cog):
             if time.time() >= self.cooldowns['battle']:
                 sent = await self.bot.send_message("battle")
                 if sent:
+                    try:
+                        history = ht.load_history()
+                        ht.track_command(history, 'battle')
+                    except Exception as e:
+                        self.bot.log("ERROR", f"History error: {e}")
+
                     delay = random.uniform(cfg.get('cooldown', [15, 18])[0], cfg.get('cooldown', [15, 18])[1])
                     self.cooldowns['battle'] = time.time() + delay
             await asyncio.sleep(1)
@@ -73,9 +86,18 @@ class Grinding(commands.Cog):
             if not cfg.get('enabled', False):
                 await asyncio.sleep(5)
                 continue
+            
             if time.time() >= self.cooldowns['owo']:
+                self.cooldowns['owo'] = time.time() + 5 
                 sent = await self.bot.send_message("owo")
+                
                 if sent:
+                    try:
+                        history = ht.load_history()
+                        ht.track_command(history, 'other')
+                    except Exception as e:
+                        self.bot.log("ERROR", f"History error: {e}")
+
                     delay = random.uniform(cfg.get('cooldown', [10, 13])[0], cfg.get('cooldown', [10, 13])[1])
                     self.cooldowns['owo'] = time.time() + delay
             await asyncio.sleep(1)

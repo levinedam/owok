@@ -1,6 +1,6 @@
 # This file is part of NeuraSelf-UwU.
 # Copyright (c) 2025-Present Routo
-
+#
 # NeuraSelf-UwU is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -28,9 +28,7 @@ class CooldownManager:
         
         content = message.content.lower()
         
-        # Handle "slow down" messages
         if "slow down" in content or "try the command again" in content:
-            # Extract time (handle "1 seconds" typo)
             seconds = 1
             match = re.search(r'(\d+)\s*seconds?', content, re.I)
             if match:
@@ -38,10 +36,8 @@ class CooldownManager:
             elif "1 seconds" in content:
                 seconds = 1
             
-            # Set throttle with buffer
             self.bot.throttle_until = time.time() + seconds + 3.0
             
-            # Log to state
             state.stats['last_cooldown'] = {
                 'seconds': seconds,
                 'command': getattr(self.bot, 'last_sent_command', ''),

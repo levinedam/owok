@@ -1,6 +1,6 @@
 # This file is part of NeuraSelf-UwU.
 # Copyright (c) 2025-Present Routo
-
+#
 # NeuraSelf-UwU is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -32,6 +32,7 @@ class Gems:
         }
         
         self.inventory_check = False
+        self.last_inv_time = 0
 
     def convert_small_numbers(self, text):
         mapping = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789")
@@ -46,9 +47,9 @@ class Gems:
         return available
 
     def find_gems_to_use(self, available):
-        cnf = self.bot.config.get('auto_use', {}).get('gems', {})
+        cnf = self.bot.config.get('commands', {}).get('gems', {})
         tier_cfg = cnf.get('tiers', {})
-        type_cfg = cnf.get('gemsToUse', {})
+        type_cfg = cnf.get('types', {})
         order_cfg = cnf.get('order', {})
 
         tier_priority = ['fabled', 'legendary', 'mythical', 'epic', 'rare', 'uncommon', 'common']
@@ -58,12 +59,10 @@ class Gems:
 
         desired_types = []
         if type_cfg.get('huntGem', True): desired_types.append('huntGem')
-        if type_cfg.get('luckyGem', True): desired_types.append('luckyGem')
         if type_cfg.get('empoweredGem', True): desired_types.append('empoweredGem')
+        if type_cfg.get('luckyGem', True): desired_types.append('luckyGem')
         if type_cfg.get('specialGem', False): desired_types.append('specialGem')
 
-        gems_to_equip = []
-        
         type_to_index = {
             "huntGem": 0,
             "empoweredGem": 1, 
@@ -71,17 +70,45 @@ class Gems:
             "specialGem": 3
         }
 
+        use_set = cnf.get('use_gems_set', False)
+        
+        if use_set:
+            for tier in tier_priority:
+                if not tier_cfg.get(tier, True): continue
+                
+                tier_ids = self.gem_tiers.get(tier)
+                if not tier_ids: continue
+
+                has_all = True
+                temp_gems = []
+                
+                for g_type in desired_types:
+                    idx = type_to_index.get(g_type)
+                    if idx is None or idx >= len(tier_ids): 
+                        has_all = False
+                        break
+                    
+                    gem_id = tier_ids[idx]
+                    if available.get(gem_id, 0) < 1:
+                        has_all = False
+                        break
+                    temp_gems.append(gem_id)
+                
+                if has_all:
+                    for g in temp_gems:
+                        available[g] -= 1
+                    return temp_gems
+            
+        gems_to_equip = []
         for g_type in desired_types:
             idx = type_to_index.get(g_type)
             if idx is None: continue
 
             for tier in tier_priority:
-                if not tier_cfg.get(tier, True): 
-                    continue
+                if not tier_cfg.get(tier, True): continue
                 
                 tier_ids = self.gem_tiers.get(tier)
-                if not tier_ids or idx >= len(tier_ids): 
-                    continue
+                if not tier_ids or idx >= len(tier_ids): continue
                 
                 gem_id = tier_ids[idx]
 
@@ -93,7 +120,9 @@ class Gems:
         return gems_to_equip if gems_to_equip else None
 
     async def on_message(self, message):
-        monitor_id = str(self.bot.config.get('monitor_bot_id', '408785106942164992'))
+        core_config = self.bot.config.get('core', {})
+        monitor_id = str(core_config.get('monitor_bot_id', '408785106942164992'))
+        
         if str(message.author.id) != monitor_id:
             return
         if message.channel.id != self.bot.channel_id:
@@ -101,16 +130,25 @@ class Gems:
         
         content = message.content.lower()
         
+        gems_config = self.bot.config.get('commands', {}).get('gems', {})
+        if not gems_config.get('enabled', False):
+            return
+
         if "caught" in content:
-            cnf = self.bot.config.get('auto_use', {}).get('gems', {})
-            if cnf.get('enabled', False):
-                gem_indicators = ["<:gem", "💎", ":egem"]
-                if not any(g in content for g in gem_indicators):
+            if not self.bot.is_message_for_me(message):
+                return
+            gem_indicators = ["<:gem", "💎", ":egem"]
+            if not any(g in content for g in gem_indicators):
+                now = time.time()
+                if now - self.last_inv_time > 30: 
                     self.bot.log("SYS", "🔍 Gems missing! Triggering inventory check.")
                     self.inventory_check = True
+                    self.last_inv_time = now
                     await self.bot.send_message(f"{self.bot.prefix}inv")
 
         elif "'s inventory" in content and "**" in content:
+            if not self.bot.is_message_for_me(message, role="header"):
+                return
             if self.inventory_check:
                 self.inventory_check = False
                 available = self.find_gems_available(message.content)
