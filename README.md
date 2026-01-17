@@ -6,8 +6,8 @@
   <br/>
   <br/>
 
-  <a href="https://discord.gg/mHU4bESA4p">
-    <img src="https://invidget.switchblade.xyz/mHU4bESA4p" alt="Discord Community"/>
+  <a href="https://discord.gg/BnrnHzjeNj">
+    <img src="https://invidget.switchblade.xyz/BnrnHzjeNj" alt="Discord Community"/>
   </a>
   
   <br/>
