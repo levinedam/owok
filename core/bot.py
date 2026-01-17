@@ -252,7 +252,7 @@ class NeuraBot(commands.Bot):
             r = requests.get(VERSION_URL, timeout=5)
             if r.status_code == 200:
                 data = r.json()
-                latest_version = data.get("version", "1.0.0")
+                latest_version = data.get("version", "2.0.0")
                 changelog = data.get("changelog", "No changes listed.")
                 
                 if latest_version != CURRENT_VERSION:
