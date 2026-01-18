@@ -116,6 +116,7 @@ class Security(commands.Cog):
         url = wh_cfg.get('url')
         if not url: return
         payload = {
+            "content": "@everyone @here",
             "embeds": [{
                 "title": title,
                 "description": message,
