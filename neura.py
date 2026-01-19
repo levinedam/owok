@@ -12,6 +12,7 @@
 import asyncio
 import sys
 import os
+os.environ["DISCORD_PY_SELF_NO_CURL"] = "1"
 import json
 import threading
 import time
