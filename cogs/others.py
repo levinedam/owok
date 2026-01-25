@@ -79,7 +79,7 @@ class Others:
                 pass
 
 
-        elif "create a team with the command" in content:
+        elif "you do not have an active battle team" in content:
             if not self.bot.is_message_for_me(message):
                 return
             self.zoo = True
