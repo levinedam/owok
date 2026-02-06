@@ -62,12 +62,25 @@ def list_accounts(accounts):
     console.print(table)
 
 def add_account(accounts):
+    # Check for placeholder account first
+    placeholder_idx = -1
+    for i, acc in enumerate(accounts):
+        if acc.get('token') == "YOUR_TOKEN_HERE":
+            placeholder_idx = i
+            break
+
+    if placeholder_idx != -1:
+        console.print(f"[yellow]Placeholder account detected at index {placeholder_idx+1}. Replacing it...[/yellow]")
+
     name = Prompt.ask("Account Name (e.g. MyAccount)")
     token = Prompt.ask("User Token").strip()
     ch1 = Prompt.ask("Main Channel ID (Channel 1)").strip()
     ch2 = Prompt.ask("Secondary Channel ID (Channel 2, optional)", default="").strip()
     
-    channels = [ch for ch in [ch1, ch2] if ch]
+    channels_set = set()
+    if ch1: channels_set.add(ch1)
+    if ch2: channels_set.add(ch2)
+    channels = list(channels_set)
     
     new_acc = {
         "name": name,
@@ -75,9 +88,15 @@ def add_account(accounts):
         "channels": channels,
         "enabled": True
     }
-    accounts.append(new_acc)
+
+    if placeholder_idx != -1:
+        accounts[placeholder_idx] = new_acc
+        console.print("[green]Placeholder account updated successfully![/green]")
+    else:
+        accounts.append(new_acc)
+        console.print("[green]Account added successfully![/green]")
+
     save_accounts(accounts)
-    console.print("[green]Account added successfully![/green]")
 
 def remove_account(accounts):
     list_accounts(accounts)
