@@ -60,10 +60,12 @@ class HuntBot(commands.Cog):
         await self._process_message(after)
 
     async def _process_message(self, message):
-        if message.author.id != int(self.bot.owo_bot_id): return
         if self.bot.owo_user is None:
             self.bot.owo_user = message.author
         if message.channel.id != self.bot.channel_id: return
+        
+        # Load config for this scope
+        cfg = self.bot.config.get('commands', {}).get('huntbot', {})
         
         content = message.content or ""
         if message.embeds:
