@@ -199,7 +199,7 @@ class NeuraBot(commands.Bot):
         known = ['h','hunt', 'battle', 'curse', 'huntbot', 'daily', 'cookie',
                 'quest', 'checklist', 'cf', 'slots', 'autohunt', 'upgrade',
                 'sacrifice', 'team', 'zoo', 'use', 'inv', 'sell', 'crate',
-                'lootbox', 'run', 'pup', 'piku']
+                'lootbox', 'run', 'pup', 'piku','pray']
         first = cmd.lower().split()[0] if cmd else ""
         if first in known and not cmd.lower().startswith(self.prefix.lower()):
             return f"{self.prefix}{cmd}"
