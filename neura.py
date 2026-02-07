@@ -115,12 +115,26 @@ async def main():
         for i, acc in enumerate(accounts):
             token = acc.get('token')
             channels = acc.get('channels')
-            if not token: continue
-            bot = NeuraBot(token=token, channels=channels)
-            state.bot_instances.append(bot)
-            bots.append(bot)
-            tasks.append(bot.run_bot())
-            console.print(f"[green]Initialized Account {i+1}[/green]")
+            
+            if not token or "YOUR_TOKEN_HERE" in token or "PLACEHOLDER" in token:
+                 console.print(f"[yellow]Skipping Account {i+1} ({acc.get('name', 'Unknown')}): Placeholder detected.[/yellow]")
+                 continue
+
+            valid_channels = []
+            if channels:
+                for ch in channels:
+                    if ch and "YOUR_CHANNEL_ID_HERE" not in str(ch) and "PLACEHOLDER" not in str(ch):
+                         valid_channels.append(ch)
+            
+            try:
+                bot = NeuraBot(token=token, channels=valid_channels)
+                state.bot_instances.append(bot)
+                bots.append(bot)
+                tasks.append(bot.run_bot())
+                console.print(f"[green]Initialized Account {i+1} ({acc.get('name', 'Unknown')})[/green]")
+            except Exception as e:
+                console.print(f"[bold red]Failed to initialize Account {i+1}: {e}[/bold red]")
+                continue
             
         console.print("[bold green]All accounts initialized. Connecting...[/bold green]")
         await asyncio.gather(*tasks)
