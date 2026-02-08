@@ -44,10 +44,10 @@
 - **Auto Hunt Bot**: Automatically solves HuntBot captchas using advanced image recognition.
 - **Mobile Support**: Fully functional on Android (Termux) with vibrations and toasts.
 - **Multi-Account**: Run unlimited accounts simultaneously with independent configs.
-- **Dynamic Quest Intelligence**: Auto-completes checklists and tracks progression.
+- **Dynamic Quest Intelligence**: Auto-completes quests and tracks progression.
 - **Undetectable Stealth**: Realistic typing simulation with mistakes and backspacing.
 - **Premium Dashboard**: Real-time stats, charts, and live configuration editor.
-- **Security System**: Auto-pauses on admin detection, captchas, or suspicious DMs.
+- **Security System**: Auto-pauses on detection captchas.
 
 ---
 
