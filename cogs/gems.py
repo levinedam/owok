@@ -39,12 +39,10 @@ class Gems:
         return int(nums) if nums else 0
 
     def find_gems_available(self, content):
-        # Support both '051 💎: ⁵' and '`051` 💎: 5' or '**051** 💎 : 5'
-        # Matches ID (2-3 digits) and Count (superscript or standard digits)
         matches = re.findall(r"(?:`|\*\*)?(\d{2,3})(?:`|\*\*)?.*?([⁰¹²³⁴⁵⁶⁷⁸⁹0-9]+)", content)
         available = {}
         for gid, count_str in matches:
-            if gid.isdigit(): # Ensure it's a valid ID
+            if gid.isdigit(): 
                 available[gid] = self.convert_small_numbers(count_str)
         return available
 
@@ -74,10 +72,10 @@ class Gems:
 
         use_set = cnf.get('use_gems_set', False)
         
-        # LOGIC 1: Use Set (All desired gems must be from SAME tier)
+
         if use_set:
             for tier in tier_priority:
-                if not tier_cfg.get(tier, True): continue # Skip if tier disabled
+                if not tier_cfg.get(tier, True): continue 
                 
                 tier_ids = self.gem_tiers.get(tier)
                 if not tier_ids: continue
@@ -85,7 +83,6 @@ class Gems:
                 has_all = True
                 temp_gems = []
                 
-                # Check if this tier has ALL required gems
                 for g_type in desired_types:
                     idx = type_to_index.get(g_type)
                     if idx is None or idx >= len(tier_ids): 
@@ -99,13 +96,13 @@ class Gems:
                     temp_gems.append(gem_id)
                 
                 if has_all:
-                    # Found a complete set in this tier
+
                     for g in temp_gems:
                         available[g] -= 1
                     return temp_gems
-            return None # No complete set found
+            return None 
             
-        # LOGIC 2: Individual (Best available tier for EACH gem type)
+
         gems_to_equip = []
         for g_type in desired_types:
             idx = type_to_index.get(g_type)
@@ -124,7 +121,7 @@ class Gems:
                     gems_to_equip.append(gem_id)
                     available[gem_id] -= 1
                     found_for_this_type = True
-                    break # Stop searching tiers for this specific gem type
+                    break 
         
         return gems_to_equip if gems_to_equip else None
 
@@ -151,11 +148,10 @@ class Gems:
             gem_indicators = ["<:gem", "💎", ":egem"]
             if not any(g in content for g in gem_indicators):
                 now = time.time()
-                if now - self.last_inv_time > 300: # Much longer cooldown (5 mins) 
+                if now - self.last_inv_time > 300: 
                     self.bot.log("SYS", "🔍 Gems missing! Triggering check.")
                     state.checking_gems[self.bot.user_id] = True
                     self.last_inv_time = now
-                    # Use priority and skip typing for speed
                     await self.bot.send_message(f"{self.bot.prefix}inv", priority=True, skip_typing=True)
 
         elif ("'s inventory" in content or "'s gems" in content) and "**" in content:
@@ -168,7 +164,7 @@ class Gems:
                 
                 if to_use:
                     use_cmd = f"{self.bot.prefix}use {' '.join([gid[1:] if gid.startswith('0') else gid for gid in to_use])}"
-                    # Priority use command
+                
                     await self.bot.send_message(use_cmd, priority=True, skip_typing=True)
                     self.bot.log("SUCCESS", f"💎 Auto-Equipped: {use_cmd}")
                     self.bot.stats['gems_used'] = self.bot.stats.get('gems_used', 0) + len(to_use)
