@@ -1,10 +1,10 @@
 {
     "accounts": [
         {
-            "token": "YOUR_TOKEN_HERE",
+            "token": "",
             "channels": [
-                "YOUR_CHANNEL_ID_HERE",
-                "YOUR_CHANNEL_ID_HERE"
+                "1157580181356167268",
+                "1157580562777767998"
             ],
             "enabled": true
         }
