@@ -94,7 +94,7 @@
             "enabled": true
         },
         "huntbot": {
-            "cash_to_spend": 25000,
+            "cash_to_spend": 29000,
             "enabled": true
         },
         "open": {
