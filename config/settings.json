@@ -27,7 +27,7 @@
             "side": "h"
         },
         "cookie": {
-            "enabled": true,
+            "enabled": false,
             "id": "targetid"
         },
         "curse": {
