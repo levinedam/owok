@@ -84,7 +84,7 @@
                 "1168797827464429618"
             ],
             "cooldown": 2,
-            "enabled": true
+            "enabled": false
         },
         "hunt": {
             "cooldown": [
